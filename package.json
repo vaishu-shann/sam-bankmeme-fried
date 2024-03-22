@@ -32,11 +32,16 @@
         "@solana/wallet-adapter-react-ui": "^0.9.35",
         "@solana/wallet-adapter-wallets": "^0.16.10",
         "@solana/web3.js": "^1.91.1",
+        "antd": "^5.15.3",
+        "prismjs": "^1.29.0",
         "react": "^18.2.0",
         "react-app-rewired": "^2.2.1",
         "react-dom": "^18.2.0",
         "react-fast-marquee": "^1.6.4",
+        "react-icons": "^5.0.1",
+        "react-router-dom": "^6.22.3",
         "react-scripts": "^5.0.1",
+        "react-simple-code-editor": "^0.13.1",
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {

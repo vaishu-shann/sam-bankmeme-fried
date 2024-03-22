@@ -47,17 +47,18 @@
     }
 }
 
-.nav-flex{display: flex;
-align-items: center;
+.nav-flex {
+    display: flex;
+    align-items: center;
 }
-.nav-link{
+.nav-link {
     padding-right: 30px;
     cursor: pointer;
     font-weight: 500;
     letter-spacing: 0.6px;
     text-transform: uppercase;
 }
-.Heading{
+.Heading {
     font-size: 28px;
     text-align: center;
     font-weight: 500;
@@ -112,25 +113,30 @@ align-items: center;
     justify-content: center;
     margin-top: 50px;
 }
-.ms-sec{
+.ms-sec {
     max-width: 1000px;
-margin:50px auto 50px;
-padding-top: 40px;
+    margin: 50px auto 50px;
+    padding-top: 40px;
+    background-color: #e6dbca;
+    border-radius: 4px;
 }
-.tkn-sec{
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-between;
-margin-top: 20px;
+.tkn-sec {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
 }
-.tkn-addr{
-width: 1000px;
+.tkn-addr {
+    width: 940px;
+    padding: 0 30px;
 }
-.defla-sec{
-
+.editor .editorLineNumber{
+    color:#0000008f !important;
 }
-.tkn-field{
+.defla-sec {
+}
+.tkn-field {
     /* display: flex;
     align-items: center;
     border: 2px solid rgba(152, 161, 192, 0.24);
@@ -144,77 +150,77 @@ width: 1000px;
 }
 textarea {
     width: 95%;
-background: url(http://i.imgur.com/2cOaJ.png);
-background-attachment: local;
-background-repeat: no-repeat;
-padding-left: 35px;
-padding-top: 10px;
-border-color: rgba(152, 161, 192, 0.24);
-color: #fff;
+    background: url(http://i.imgur.com/2cOaJ.png);
+    background-attachment: local;
+    background-repeat: no-repeat;
+    padding-left: 35px;
+    padding-top: 10px;
+    border-color: rgba(152, 161, 192, 0.24);
+    color: #fff;
 }
 .editor {
-counter-reset: line;
-border: 2px solid #000;
-color:#000;
-border-radius: 4px!important;
+    counter-reset: line;
+    border: 1px solid rgb(102 88 80 / 52%);
+    color: #000;
+    border-radius: 4px !important;
 }
 
 .editor #codeArea {
-outline: none;
-padding-left: 60px !important;
+    outline: none;
+    padding-left: 60px !important;
 }
 
 .editor pre {
-padding-left: 60px !important;
+    padding-left: 60px !important;
 }
 
 .editor .editorLineNumber {
-position: absolute;
-left: 0px;
-color: #cccccc;
-text-align: right;
-width: 40px;
-font-weight: 100;
+    position: absolute;
+    left: 0px;
+    color: #cccccc;
+    text-align: right;
+    width: 40px;
+    font-weight: 100;
 }
-.csv-button{
-background-color: rgb(209, 114, 37);
-color: rgb(0,0,0);
-font-size: 14px;
-font-weight: 400;
-padding: 10px 18px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-letter-spacing: 0.8px;
-float: right;
-margin-right: 9px;
+.csv-button {
+    background-color: rgb(209, 114, 37);
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+    float: right;
+    margin-right: 9px;
 }
-.csv-opac{
-opacity: 0;
-position: absolute;
-cursor: pointer;
-z-index: 1;
-width: 84px;
-margin-left: -81px;
+.csv-opac {
+    opacity: 0;
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+    width: 84px;
+    margin-left: -81px;
 }
 .token-input-ms {
-width: 97%;
-border: 1px solid rgba(152, 161, 192, 0.24);
-background: transparent;
-border-radius: 4px;
-line-height: 1.5rem;
-padding: 10px 12px;
-font-size: 1rem;
-margin-bottom: 10px;
-outline-style: none;
-color: #fff;
+    width: 97%;
+    border: 1px solid rgb(102 88 80 / 52%);
+    background: transparent;
+    border-radius: 4px;
+    line-height: 1.5rem;
+    padding: 10px 12px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    outline-style: none;
+    color: #000000b3;
 }
-.dot-gif{
-width: 70px;
-height: 50px;
-margin-left: 15px;
+.dot-gif {
+    width: 70px;
+    height: 50px;
+    margin-left: 15px;
 }
-.deploy-cta-gray{
+.deploy-cta-gray {
     padding: 15px 25px;
     background-color: rgb(0, 204, 150) !important;
     color: #000 !important;
@@ -224,5 +230,35 @@ margin-left: 15px;
     font-weight: 600;
     letter-spacing: 0.3px;
     display: block;
-    margin:50px auto 0;
+    margin: 50px auto 0;
+}
+.contract-section{
+    position: relative;
+    max-width: 1000px;
+    width: 100%;
+    margin: auto;
+    background-color: #e6dbca;
+    border-radius: 4px;
+    padding:80px 15px;
+    /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
+
+}
+.cont-addr{
+    font-size: 17px;
+    font-weight: 400;
+    text-align: center;
+    color: #000000ab;
+}
+.cs-img1{
+    width: 50px;
+    height: 50px;
+    margin-top: -10px;
+    margin-right: 15px;
+}
+.cs-img2{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }

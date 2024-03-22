@@ -36,6 +36,7 @@ function Multisender() {
     const [loadingText, setLoadingText] = useState();
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalSenders, setTotalSenders] = useState(0);
+    const [tokenAddress, setTokenAddress] = useState();
     const handleChange = (e) => {
         const file = e.target.files[0];
         let reader = new FileReader();
@@ -67,15 +68,53 @@ function Multisender() {
             return;
         }
     };
-    const lookupSearch = () => {};
-    const closeModal = () => {
-        setModal1Open(false);
-        window.location.reload();
-    };
+    const closeModal = () =>{
+      setModal1Open(false)
+      window.location.reload();
+    }
     return (
         <div className="ms-sec">
             <div className="Heading">$SBF Token - Multisender</div>
-
+            <div className="tkn-addr">
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 5,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <IconContext.Provider
+                value={{
+                  size: "1.2em",
+                  color: "rgb(139 149 169)",
+                  className: "global-class-name",
+                }}
+              >
+                <div style={{ marginRight: 8 }}>
+                  <TbLockAccess />
+                </div>
+              </IconContext.Provider>
+              <div className="sub-head">Token Address</div>
+            </div>
+            <div className="sub-head">
+              
+                Balance: --
+              </div>
+            </div>
+            <input
+                placeholder="Please enter the token address"
+                className="token-input-ms"
+                value={"FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M"}
+              />
+            </div>
             <div className="tkn-addr">
                 <div
                     style={{

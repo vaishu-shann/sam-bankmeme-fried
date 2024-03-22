@@ -15,8 +15,7 @@ const App = () => {
             <div className="header">
                 <img src="./img/Logo.png" alt="navbarImage" className="header-logo" />
                 <div className="nav-flex">
-                    <p className="nav-link" onClick={()=>navigate("/")}>Claim</p>
-                    <p className="nav-link" onClick={()=>navigate("/admin")}>Airdrop Admin</p>
+                    
                     <Home />
                 </div>
             </div>

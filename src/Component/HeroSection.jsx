@@ -4,8 +4,8 @@ import base58 from "bs58";
 
 const HeroSection = () => {
     const { publicKey } =    useWallet();
-    const walletAddress = publicKey.toBase58();
-    console.log("walletAddress",walletAddress)
+    // const walletAddress = publicKey.toBase58();
+    // console.log("walletAddress",walletAddress)
     return (
         <div className="hero-section">
             <div className="avatar">

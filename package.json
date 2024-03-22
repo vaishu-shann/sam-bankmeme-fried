@@ -33,6 +33,7 @@
         "@solana/wallet-adapter-wallets": "^0.16.10",
         "@solana/web3.js": "^1.91.1",
         "antd": "^5.15.3",
+        "bs58": "^5.0.0",
         "prismjs": "^1.29.0",
         "react": "^18.2.0",
         "react-app-rewired": "^2.2.1",

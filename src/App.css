@@ -263,3 +263,39 @@ textarea {
     right: 0;
 }
 
+@media screen and (max-width:960px) {
+    .header-logo{
+        height: 70px;
+        /* */
+    }
+    .header, .hero-section{
+        width: 90%;
+    }
+
+    .hero-desc{
+        width: 95%;
+    }
+    .card{
+        width: 40%;
+        height: 120px;
+        margin: 20px auto;    
+    }
+    .marquee-section{
+        font-size: 70px;
+    }
+    .contract-section{
+        width: 89%;
+        padding: 80px 10px 120px;
+    }
+    .Heading{
+        font-size: 25px;
+    }
+    .cont-addr{
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .cs-img2{
+        width: 100px;
+        height: 100px;
+    }
+}

@@ -18,7 +18,7 @@ import {
 import { Program, AnchorProvider, web3, BN } from "@project-serum/anchor";
 import { clusterApiUrl, Connection } from "@solana/web3.js";
 import React, { FC, ReactNode, useMemo } from "react";
-import idl from "./idl.json";
+import idl from "./services/idl.json";
 
 // console.log(idl);
 

@@ -4,12 +4,14 @@ import Contract from '../Component/Contract'
 import Socials from '../Component/Socials'
 import FAQ from '../Component/FAQ'
 import Footer from '../Component/Footer'
+import Home from '../Component/Home'
 
 const ClaimPage = () => {
   return (
     <>
 
-    <HeroSection/>
+    {/* <HeroSection/> */}
+    <Home/>
     <Socials/>
     <MarqueeSection/>
     <Contract/>

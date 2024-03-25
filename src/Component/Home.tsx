@@ -4,7 +4,6 @@ import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-r
 import { clusterApiUrl } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo } from 'react';
 
-
 const Home: FC = () => {
     return (
         <Context>
@@ -19,10 +18,7 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-    const wallets = useMemo(
-        () => [ ],
-        [network]
-    );
+    const wallets = useMemo(() => [], [network]);
 
     return (
         <ConnectionProvider endpoint={endpoint}>
@@ -35,8 +31,24 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 
 const Content: FC = () => {
     return (
-        <div >
-            <WalletMultiButton />
+        <div>
+            <div className="header">
+                <img src="./img/Logo.png" alt="navbarImage" className="header-logo" />
+                <div className="nav-flex">
+                    <WalletMultiButton />
+                </div>
+            </div>
+
+            <div className="hero-section">
+                <div className="avatar">
+                    <img src="./img/Hero-Img.png" alt="hero-image" className="floating" />
+                </div>
+                <div className="hero-desc">
+                    "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
+                    claim site as a convenient way for to gift you some $SBF tokens. We CAN make it all back."
+                </div>
+                <div className="eligibility-cta">Check Eligibility</div>
+            </div>
         </div>
     );
 };

@@ -80,15 +80,15 @@ const Content: FC = () => {
             console.log('Transcation error: ', err);
         }
     }
-
     async function checkEligibility() {
         const program = getProgram();
         if (!program) {
             return;
         }
         try {
-            const data:any = await program.account.user.fetch(config.accoundUserId);
-
+            const data = await program.account.user.fetch(config.accoundUserId);
+            let is_eligible = false;
+            let index;
             // await program.rpc.initialize({
             //     accounts: {
             //         myAccount: baseAccount.publicKey,
@@ -99,9 +99,17 @@ const Content: FC = () => {
             // });
 
             // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
+            if (data.user.includes(wallet?.publicKey)) {
+                console.log("Valid Claimer:", wallet?.publicKey.toString());
+                is_eligible = true;
+                index = data.user.indexOf(wallet?.publicKey)
+            } else {
+                console.log("InValid Claimer: ", wallet?.publicKey.toString());
+            }
+
             console.log('account: ', data);
-            console.log('user: ', data.user.toString());
-            console.log('token: ', data.token.toString());
+            console.log('user: ', data.user[0].toString());
+            console.log('token: ', data.token[0].toString());
             // console.log('totalUsers: ', data.totalUsers.toString());
 
             // await program.rpc.increment({

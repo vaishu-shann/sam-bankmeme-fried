@@ -35,6 +35,8 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 
 const Content: FC = () => {
     const [isEligibleClaim, setIsEligibleClaim] = useState(false);
+    const [showEligibleCTA, setShowEligibleCTA] = useState(true);
+
     const wallet = useAnchorWallet();
     console.log('wallet', wallet);
     const baseAccount = web3.Keypair.generate();
@@ -70,7 +72,7 @@ const Content: FC = () => {
         }
 
         try {
-            const data:any = await program.account.global.fetch(config.accountGlobalId);
+            const data: any = await program.account.global.fetch(config.accountGlobalId);
 
             console.log('account: ', data);
             console.log('claimableTokens: ', data.claimableTokens.toString());
@@ -86,8 +88,8 @@ const Content: FC = () => {
             return;
         }
         try {
-            const data = await program.account.user.fetch(config.accoundUserId);
-            let is_eligible = false;
+            const data: any = await program.account.user.fetch(config.accoundUserId);
+
             let index;
             // await program.rpc.initialize({
             //     accounts: {
@@ -100,11 +102,12 @@ const Content: FC = () => {
 
             // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
             if (data.user.includes(wallet?.publicKey)) {
-                console.log("Valid Claimer:", wallet?.publicKey.toString());
-                is_eligible = true;
-                index = data.user.indexOf(wallet?.publicKey)
+                console.log('Valid Claimer:', wallet?.publicKey.toString());
+                setShowEligibleCTA(false);
+                setIsEligibleClaim(true);
+                index = data.user.indexOf(wallet?.publicKey);
             } else {
-                console.log("InValid Claimer: ", wallet?.publicKey.toString());
+                console.log('Invalid Claimer: ', wallet?.publicKey.toString());
             }
 
             console.log('account: ', data);
@@ -161,15 +164,25 @@ const Content: FC = () => {
                     "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
                     claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back."
                 </div>
-                {!isEligibleClaim ? (
-                    <div className="eligibility-cta" onClick={checkEligibility}>
-                        Check Eligibility
-                    </div>
-                ) : (
-                    <div className="eligibility-cta" onClick={claimTokens}>
-                        Claim your 500 $SBF Tokens
-                    </div>
-                )}
+                <div className="hero-section">
+                    {showEligibleCTA ? (
+                        <div className="eligibility-cta" onClick={checkEligibility}>
+                            Check Eligibility
+                        </div>
+                    ) : (
+                        <>
+                            {!isEligibleClaim ? (
+                                <div className="eligibility-cta" onClick={claimTokens}>
+                                    No Claim Available
+                                </div>
+                            ) : (
+                                <div className="eligibility-cta" onClick={claimTokens}>
+                                    Claim your 500 $SBF Tokens
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );

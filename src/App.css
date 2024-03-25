@@ -118,7 +118,8 @@
     margin: 50px auto 50px;
     padding-top: 40px;
     background-color: #e6dbca;
-    border-radius: 4px;
+    border-radius: 20px;
+    padding-bottom: 40px;
 }
 .tkn-sec {
     display: flex;
@@ -298,6 +299,20 @@ textarea {
         padding: 10px!important;
         width: 95%!important;
         margin: auto!important;
+    }
+    .tkn-addr{
+        width: 90%;
+        margin: auto;
+        padding: 0 8px;
+    }
+    .token-input-ms{
+        width: 91%;
+    }
+    .csv-button{
+        margin-right: 5px;
+    }
+    .ms-sec{
+        padding-bottom: 40px;
     }
 }
 

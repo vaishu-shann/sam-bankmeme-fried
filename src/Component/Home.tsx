@@ -1,18 +1,12 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import {
-    GlowWalletAdapter,
-    PhantomWalletAdapter,
-    SlopeWalletAdapter,
-    SolflareWalletAdapter,
-    TorusWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
-import { Program, AnchorProvider, web3, BN } from "@project-serum/anchor";
-import { clusterApiUrl, Connection } from "@solana/web3.js";
-import React, { FC, ReactNode, useMemo } from "react";
-import idl from "./../idl.json";
-
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { Program, AnchorProvider, web3, BN } from '@project-serum/anchor';
+import { clusterApiUrl, Connection } from '@solana/web3.js';
+import React, { FC, ReactNode, useMemo } from 'react';
+import idl from '../services/idl.json';
+import config from '../config';
 
 const Home: FC = () => {
     return (
@@ -28,12 +22,7 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-    const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter()
-        ],
-        [network]
-    );
+    const wallets = useMemo(() => [new PhantomWalletAdapter()], [network]);
 
     return (
         <ConnectionProvider endpoint={endpoint}>
@@ -53,9 +42,9 @@ const Content: FC = () => {
             return null;
         }
 
-        const connection = new Connection(web3.clusterApiUrl("devnet"), "confirmed");
+        const connection = new Connection(web3.clusterApiUrl('devnet'), 'confirmed');
         const provider = new AnchorProvider(connection, wallet, {
-            preflightCommitment: "confirmed",
+            preflightCommitment: 'confirmed',
         });
 
         return provider;
@@ -70,17 +59,16 @@ const Content: FC = () => {
 
         const a = JSON.stringify(idl);
         const b = JSON.parse(a);
-        const program = new Program(b, "6mnNGTZiWSp4bJsCxea1bvi4DTsD1opZhDwbfneYzbsD", provider);
+        const program = new Program(b, config.programId, provider);
         try {
-            const data = await program.account.global.fetch("2VCJnP9gZkAeejwbDFaNpCbNTCRAjDx7xR9zXKbSPFyn");
+            const data = await program.account.global.fetch(config.accountGlobalId);
 
             console.log('account: ', data);
             console.log('claimableTokens: ', data.claimableTokens.toString());
             console.log('claimedTokens: ', data.claimedTokens.toString());
             console.log('totalUsers: ', data.totalUsers.toString());
-        }
-        catch (err) {
-            console.log("Transcation error: ", err);
+        } catch (err) {
+            console.log('Transcation error: ', err);
         }
     }
 
@@ -101,7 +89,9 @@ const Content: FC = () => {
                     "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
                     claim site as a convenient way for to gift you some $SBF tokens. We CAN make it all back."
                 </div>
-                <div className="eligibility-cta" onClick={createCounter}>Check Eligibility</div>
+                <div className="eligibility-cta" onClick={createCounter}>
+                    Check Eligibility
+                </div>
             </div>
         </div>
     );

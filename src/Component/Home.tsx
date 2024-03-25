@@ -51,16 +51,23 @@ const Content: FC = () => {
         return provider;
     }
 
-    async function createCounter() {
+    function getProgram() {
         const provider = getProvider();
-
         if (!provider) {
             return;
         }
 
-        const a = JSON.stringify(idl);
-        const b = JSON.parse(a);
-        const program = new Program(b, config.programId, provider);
+        const prog_idl = JSON.parse(JSON.stringify(idl));
+        const program = new Program(prog_idl, config.programId, provider);
+        return program;
+    }
+
+    async function getGlobalStats() {
+        const program = getProgram();
+        if (!program) {
+            return;
+        }
+
         try {
             const data = await program.account.global.fetch(config.accountGlobalId);
 
@@ -70,6 +77,64 @@ const Content: FC = () => {
             console.log('totalUsers: ', data.totalUsers.toString());
         } catch (err) {
             console.log('Transcation error: ', err);
+        }
+    }
+
+    async function checkEligibility() {
+        const program = getProgram();
+        if (!program) {
+            return;
+        }
+        try {
+            const data = await program.account.user.fetch(config.accoundUserId);
+
+            // await program.rpc.initialize({
+            //     accounts: {
+            //         myAccount: baseAccount.publicKey,
+            //         user: provider.wallet.publicKey,
+            //         systemProgram: web3.SystemProgram.programId,
+            //     },
+            //     signers: [baseAccount]
+            // });
+
+            // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
+            console.log('account: ', data);
+            console.log('user: ', data.user.toString());
+            console.log('token: ', data.token.toString());
+            // console.log('totalUsers: ', data.totalUsers.toString());
+
+            // await program.rpc.increment({
+            //     accounts: {
+            //         myAccount: baseAccount.publicKey,
+            //     },
+            // });
+
+            // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
+            // console.log('account: ', account.data.toString());
+        }
+        catch (err) {
+            console.log("Transcation error: ", err);
+        }
+    }
+
+
+    async function claimTokens() {
+        const program = getProgram();
+        if (!program) {
+            return;
+        }
+        try {
+            await program.methods.claimToken(new BN(100), {
+                accounts: {
+                    myAccount: baseAccount.publicKey,
+                },
+            });
+
+            const account = await program.account.myAccount.fetch(baseAccount.publicKey);
+            // console.log('account: ', account.data.toString());
+        }
+        catch (err) {
+            console.log("Transcation error: ", err);
         }
     }
 
@@ -90,8 +155,11 @@ const Content: FC = () => {
                     "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
                     claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back."
                 </div>
-                <div className="eligibility-cta" onClick={createCounter}>
+                <div className="eligibility-cta" onClick={checkEligibility}>
                     Check Eligibility
+                </div>
+                <div className="eligibility-cta" onClick={claimTokens}>
+                    Claim Tokens
                 </div>
             </div>
         </div>

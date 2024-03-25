@@ -259,7 +259,7 @@ const Socials = () => {
                     </div>
                 </div>
             </div>
-            <div className="card"  onClick={() => openInNewTab("")}>
+            <div className="card"  onClick={() => openInNewTab("https://www.coingecko.com/en/coins/sam-bankmeme-fried")}>
                 <div class="content">
                     <div class="back">
                         <div class="back-content">
@@ -282,7 +282,7 @@ const Socials = () => {
                             <div class="description">
                                 <div class="title">
                                     <p class="title">
-                                        <strong>@sambankmeme</strong>
+                                        <strong>Coingeko</strong>
                                     </p>
 
                                     <svg
@@ -316,13 +316,13 @@ const Socials = () => {
                                     </svg>
                                 </div>
 
-                                <p class="card-footer">Join our Telegram</p>
+                                <p class="card-footer">View Chart</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="card"  onClick={() => openInNewTab("")}>
+            <div className="card"  onClick={() => openInNewTab("https://coinmarketcap.com/currencies/sam-bankmeme-fried/")}>
                 <div class="content">
                     <div class="back">
                         <div class="back-content">
@@ -345,7 +345,7 @@ const Socials = () => {
                             <div class="description">
                                 <div class="title">
                                     <p class="title">
-                                        <strong>@sambankmeme</strong>
+                                        <strong>Coinmarketcap</strong>
                                     </p>
 
                                     <svg
@@ -379,13 +379,13 @@ const Socials = () => {
                                     </svg>
                                 </div>
 
-                                <p class="card-footer">Join our Telegram</p>
+                                <p class="card-footer">View Chart</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="card"  onClick={() => openInNewTab("")}>
+            <div className="card"  onClick={() => openInNewTab("https://dexscreener.com/solana/7eeq58yoahensf4pbtg18x5tubqyge2ogkuabyufjakn")}>
                 <div class="content">
                     <div class="back">
                         <div class="back-content">
@@ -408,7 +408,7 @@ const Socials = () => {
                             <div class="description">
                                 <div class="title">
                                     <p class="title">
-                                        <strong>@sambankmeme</strong>
+                                        <strong>Dexscreen</strong>
                                     </p>
 
                                     <svg
@@ -442,13 +442,13 @@ const Socials = () => {
                                     </svg>
                                 </div>
 
-                                <p class="card-footer">Join our Telegram</p>
+                                <p class="card-footer">View Chart</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="card"  onClick={() => openInNewTab("")}>
+            <div className="card"  onClick={() => openInNewTab("https://poloniex.com/trade/SBF_USDT?type=spot")}>
                 <div class="content">
                     <div class="back">
                         <div class="back-content">
@@ -471,7 +471,7 @@ const Socials = () => {
                             <div class="description">
                                 <div class="title">
                                     <p class="title">
-                                        <strong>@sambankmeme</strong>
+                                        <strong>Poloniex Exchange</strong>
                                     </p>
 
                                     <svg
@@ -505,7 +505,7 @@ const Socials = () => {
                                     </svg>
                                 </div>
 
-                                <p class="card-footer">Join our Telegram</p>
+                                <p class="card-footer">Buy with Poloniex</p>
                             </div>
                         </div>
                     </div>

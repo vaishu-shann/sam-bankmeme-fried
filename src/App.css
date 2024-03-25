@@ -234,12 +234,12 @@ textarea {
 }
 .contract-section{
     position: relative;
-    max-width: 1000px;
+    max-width: 1100px;
     width: 100%;
     margin: auto;
     background-color: #e6dbca;
-    border-radius: 4px;
-    padding:80px 15px;
+    border-radius: 25px;
+    padding:80px 0px;
     /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
 
 }
@@ -275,11 +275,7 @@ textarea {
     .hero-desc{
         width: 95%;
     }
-    .card{
-        width: 40%;
-        height: 120px;
-        margin: 20px auto;    
-    }
+
     .marquee-section{
         font-size: 70px;
     }
@@ -298,4 +294,23 @@ textarea {
         width: 100px;
         height: 100px;
     }
+    .footer-sec{
+        padding: 10px!important;
+        width: 95%!important;
+        margin: auto!important;
+    }
+}
+
+.footer-sec{
+    color:rgb(209, 114, 37) ;
+    font-size: 12px;
+    padding: 50px 0;
+    max-width: 1100px;
+    margin: auto;
+    width: 100%;
+    line-height: 26px;
+}
+.footer-span{
+    color: rgb(0, 204, 150) ;
+    font-size: 12px;
 }

@@ -3,6 +3,7 @@ import ClaimPage from './pages/ClaimPage';
 import Home from './Component/Home';
 import Multisender from './Component/Multisender';
 import "./utils/social.css"
+import "./utils/faq.css"
 
 require('./App.css');
 require('@solana/wallet-adapter-react-ui/styles.css');

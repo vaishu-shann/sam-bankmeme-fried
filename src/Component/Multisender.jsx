@@ -10,7 +10,8 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-import { getEllipsisTxt } from '../utils/formatter';
+import { FaCopy } from "react-icons/fa6";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 let TokenSymbol = '';
@@ -22,6 +23,10 @@ const code = `
 
 
 `;
+const codeExample = `0xB97B5A0A56CC62bDCAB73C2356Dec06509cDC760,0.000056
+0xC8c30Fa803833dD1Fd6DBCDd91Ed0b301EFf87cF,13.45
+0x7D52422D3A5fE9bC92D3aE8167097eE09F1b347d,1.049
+0x64c9525A3c3a65Ea88b06f184F074C2499578A7E`;
 
 const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
@@ -32,11 +37,15 @@ const hightlightWithLineNumbers = (input, language) =>
 function Multisender() {
     const walletAddress = useAnchorWallet();
     const [codeValue, setCodeValue] = useState(code);
+    const [codeValueExample, setCodeValueExample] = useState(codeExample);
+    const[copyCode,setCopyCode]=useState(codeExample)
     const [modal1Open, setModal1Open] = useState(false);
+    const [modal2Open, setModal2Open] = useState(false);
     const [loadingText, setLoadingText] = useState();
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalSenders, setTotalSenders] = useState(0);
     const [tokenAddress, setTokenAddress] = useState();
+
     const handleChange = (e) => {
         const file = e.target.files[0];
         let reader = new FileReader();
@@ -68,74 +77,86 @@ function Multisender() {
             return;
         }
     };
-    const closeModal = () =>{
-      setModal1Open(false)
-      window.location.reload();
-    }
+    const closeModal = () => {
+        setModal1Open(false);
+        window.location.reload();
+    };
+    const closeModal2 = () => {
+        setModal2Open(false);
+    };
     return (
         <div className="ms-sec">
             <div className="Heading">$SBF Token - Multisender</div>
             <div className="tkn-addr">
-            <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 5,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              <IconContext.Provider
-                value={{
-                  size: "1.2em",
-                  color: "rgb(139 149 169)",
-                  className: "global-class-name",
-                }}
-              >
-                <div style={{ marginRight: 8 }}>
-                  <TbLockAccess />
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 5,
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 10,
+                        }}
+                    >
+                        <IconContext.Provider
+                            value={{
+                                size: '1.2em',
+                                color: 'rgb(139 149 169)',
+                                className: 'global-class-name',
+                            }}
+                        >
+                            <div style={{ marginRight: 8 }}>
+                                <TbLockAccess />
+                            </div>
+                        </IconContext.Provider>
+                        <div className="sub-head">Token Address</div>
+                    </div>
+                    <div className="sub-head">Balance: --</div>
                 </div>
-              </IconContext.Provider>
-              <div className="sub-head">Token Address</div>
-            </div>
-            <div className="sub-head">
-              
-                Balance: --
-              </div>
-            </div>
-            <input
-                placeholder="Please enter the token address"
-                className="token-input-ms"
-                value={"FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M"}
-              />
+                <input
+                    placeholder="Please enter the token address"
+                    className="token-input-ms"
+                    value={'FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M'}
+                />
             </div>
             <div className="tkn-addr">
                 <div
                     style={{
                         display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginBottom: 10,
-                        marginTop: 25,
+                        marginBottom: 5,
                     }}
                 >
-                    <IconContext.Provider
-                        value={{
-                            size: '1.2em',
-                            color: 'rgb(139 149 169)',
-                            className: 'global-class-name',
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 10,
+                            marginTop: 25,
                         }}
                     >
-                        <div style={{ marginRight: 8 }}>
-                            <BsFiletypeCsv />
-                        </div>
-                    </IconContext.Provider>
-                    <div className="sub-head">List of Addresses in CSV</div>
+                        <IconContext.Provider
+                            value={{
+                                size: '1.2em',
+                                color: 'rgb(139 149 169)',
+                                className: 'global-class-name',
+                            }}
+                        >
+                            <div style={{ marginRight: 8 }}>
+                                <BsFiletypeCsv />
+                            </div>
+                        </IconContext.Provider>
+                        <div className="sub-head">List of Addresses in CSV</div>
+                    </div>
+                    <div className="sub-head" style={{ cursor: 'pointer' }} onClick={()=>setModal2Open(true)}>
+                        Show example
+                    </div>
                 </div>
                 <Editor
                     value={codeValue}
@@ -239,6 +260,48 @@ function Multisender() {
                         </div>
                     </div>
                 )}
+            </Modal>
+            <Modal
+                className="popup-modal"
+                title={''}
+                centered
+                open={modal2Open}
+                onOk={() => setModal2Open(false)}
+                onCancel={closeModal2}
+                okButtonProps={{ style: { display: 'none' } }}
+                cancelButtonProps={{ style: { display: 'none' } }}
+            >
+            
+                <div style={{display:'flex',alignItems:'center'}}>
+                    <div  className="sub-head" style={{marginRight:8,fontSize:14}}> Multisender example</div>
+                <IconContext.Provider
+                            value={{
+                                size: '1.2em',
+                                color: 'rgb(139 149 169)',
+                                className: 'global-class-name',
+                            }}
+                        >
+                            <div style={{ marginRight: 8 }}>
+                            <FaCopy />
+                            </div>
+                        </IconContext.Provider>
+                </div>
+                <div style={{marginTop:20   }} />
+               <Editor
+                    value={codeValueExample}
+                    onValueChange={(code) => setCodeValueExample(code)}
+                    highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                    padding={10}
+                    textareaId="codeArea"
+                    className="editor"
+                    style={{
+                        fontFamily: '"Fira code", "Fira Mono", monospace',
+                        fontSize: 14,
+                        outline: 0,
+                        width: '99%',
+                    }}
+                />
+                <div style={{marginTop:20   }} />
             </Modal>
         </div>
     );

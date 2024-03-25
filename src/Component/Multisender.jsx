@@ -10,8 +10,8 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-import { FaCopy } from "react-icons/fa6";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { FaCopy } from 'react-icons/fa6';
+import copy from 'copy-to-clipboard';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 let TokenSymbol = '';
@@ -38,13 +38,21 @@ function Multisender() {
     const walletAddress = useAnchorWallet();
     const [codeValue, setCodeValue] = useState(code);
     const [codeValueExample, setCodeValueExample] = useState(codeExample);
-    const[copyCode,setCopyCode]=useState(codeExample)
+    const [copyCode, setCopyCode] = useState(false);
     const [modal1Open, setModal1Open] = useState(false);
     const [modal2Open, setModal2Open] = useState(false);
     const [loadingText, setLoadingText] = useState();
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalSenders, setTotalSenders] = useState(0);
     const [tokenAddress, setTokenAddress] = useState();
+
+    const copyToClipboard = () => {
+        setCopyCode(true);
+        copy(codeExample);
+        setTimeout(() => {
+            setCopyCode(false);
+        }, 2000);
+    };
 
     const handleChange = (e) => {
         const file = e.target.files[0];
@@ -54,7 +62,6 @@ function Multisender() {
             console.log(file);
             setCodeValue(file);
         };
-
         reader.onerror = (e) => alert(e.target.error.name);
         reader.readAsText(file);
     };
@@ -154,7 +161,7 @@ function Multisender() {
                         </IconContext.Provider>
                         <div className="sub-head">List of Addresses in CSV</div>
                     </div>
-                    <div className="sub-head" style={{ cursor: 'pointer' }} onClick={()=>setModal2Open(true)}>
+                    <div className="sub-head" style={{ cursor: 'pointer' }} onClick={() => setModal2Open(true)}>
                         Show example
                     </div>
                 </div>
@@ -177,13 +184,10 @@ function Multisender() {
                     <input type="file" name="input" onChange={handleChange} className="csv-opac" />
                 </div>
             </div>
-            {walletAddress ? (
-                <button className="deploy-cta" onClick={onMultiSend}>
-                    Continue
-                </button>
-            ) : (
-                <button className="deploy-cta-gray">Continue</button>
-            )}
+            <button className="deploy-cta" onClick={onMultiSend}>
+                Continue
+            </button>
+
             <Modal
                 className="popup-modal"
                 title={'MultiSender Detail'}
@@ -271,23 +275,25 @@ function Multisender() {
                 okButtonProps={{ style: { display: 'none' } }}
                 cancelButtonProps={{ style: { display: 'none' } }}
             >
-            
-                <div style={{display:'flex',alignItems:'center'}}>
-                    <div  className="sub-head" style={{marginRight:8,fontSize:14}}> Multisender example</div>
-                <IconContext.Provider
-                            value={{
-                                size: '1.2em',
-                                color: 'rgb(139 149 169)',
-                                className: 'global-class-name',
-                            }}
-                        >
-                            <div style={{ marginRight: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <IconContext.Provider
+                        value={{
+                            size: '1.2em',
+                            color: 'rgb(0,0,0,0.7)',
+                            className: 'global-class-name',
+                        }}
+                    >
+                        <div style={{ marginRight: 8, cursor: 'pointer' }} onClick={() => copyToClipboard()}>
                             <FaCopy />
-                            </div>
-                        </IconContext.Provider>
+                        </div>
+                    </IconContext.Provider>
+                    <div className="sub-head" style={{ marginLeft: 5, fontSize: 14, fontFamily: 'Azeret Mono' }}>
+                        {' '}
+                        {copyCode ? 'Copied' : 'Example'}
+                    </div>
                 </div>
-                <div style={{marginTop:20   }} />
-               <Editor
+                <div style={{ marginTop: 20 }} />
+                <Editor
                     value={codeValueExample}
                     onValueChange={(code) => setCodeValueExample(code)}
                     highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
@@ -301,7 +307,7 @@ function Multisender() {
                         width: '99%',
                     }}
                 />
-                <div style={{marginTop:20   }} />
+                <div style={{ marginTop: 20 }} />
             </Modal>
         </div>
     );

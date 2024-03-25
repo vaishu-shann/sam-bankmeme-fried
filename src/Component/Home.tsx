@@ -35,6 +35,7 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 
 const Content: FC = () => {
     const wallet = useAnchorWallet();
+    console.log("wallet",wallet)
     const baseAccount = web3.Keypair.generate();
 
     function getProvider() {

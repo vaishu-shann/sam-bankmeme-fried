@@ -221,7 +221,10 @@ textarea {
     height: 50px;
     margin-left: 15px;
 }
-.deploy-cta-gray {
+.deploy-cta-gray{
+
+}
+.deploy-cta {
     padding: 15px 25px;
     background-color: rgb(0, 204, 150) !important;
     color: #000 !important;
@@ -328,4 +331,7 @@ textarea {
 .footer-span{
     color: rgb(0, 204, 150) ;
     font-size: 12px;
+}
+.ant-modal .ant-modal-content{
+    background-color: #e6dbca;
 }

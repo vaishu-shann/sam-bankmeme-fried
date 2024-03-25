@@ -4,7 +4,7 @@ import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-r
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { Program, AnchorProvider, web3, BN } from '@project-serum/anchor';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
-import React, { FC, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useMemo, useState } from 'react';
 import idl from '../services/idl.json';
 import config from '../config';
 
@@ -34,8 +34,9 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const Content: FC = () => {
+    const [isEligibleClaim, setIsEligibleClaim] = useState(false);
     const wallet = useAnchorWallet();
-    console.log("wallet",wallet)
+    console.log('wallet', wallet);
     const baseAccount = web3.Keypair.generate();
 
     function getProvider() {
@@ -69,7 +70,7 @@ const Content: FC = () => {
         }
 
         try {
-            const data = await program.account.global.fetch(config.accountGlobalId);
+            const data:any = await program.account.global.fetch(config.accountGlobalId);
 
             console.log('account: ', data);
             console.log('claimableTokens: ', data.claimableTokens.toString());
@@ -86,7 +87,7 @@ const Content: FC = () => {
             return;
         }
         try {
-            const data = await program.account.user.fetch(config.accoundUserId);
+            const data:any = await program.account.user.fetch(config.accoundUserId);
 
             // await program.rpc.initialize({
             //     accounts: {
@@ -111,12 +112,10 @@ const Content: FC = () => {
 
             // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
             // console.log('account: ', account.data.toString());
-        }
-        catch (err) {
-            console.log("Transcation error: ", err);
+        } catch (err) {
+            console.log('Transcation error: ', err);
         }
     }
-
 
     async function claimTokens() {
         const program = getProgram();
@@ -132,9 +131,8 @@ const Content: FC = () => {
 
             const account = await program.account.myAccount.fetch(baseAccount.publicKey);
             // console.log('account: ', account.data.toString());
-        }
-        catch (err) {
-            console.log("Transcation error: ", err);
+        } catch (err) {
+            console.log('Transcation error: ', err);
         }
     }
 
@@ -155,12 +153,15 @@ const Content: FC = () => {
                     "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
                     claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back."
                 </div>
-                <div className="eligibility-cta" onClick={checkEligibility}>
-                    Check Eligibility
-                </div>
-                <div className="eligibility-cta" onClick={claimTokens}>
-                    Claim Tokens
-                </div>
+                {!isEligibleClaim ? (
+                    <div className="eligibility-cta" onClick={checkEligibility}>
+                        Check Eligibility
+                    </div>
+                ) : (
+                    <div className="eligibility-cta" onClick={claimTokens}>
+                        Claim your 500 $SBF Tokens
+                    </div>
+                )}
             </div>
         </div>
     );

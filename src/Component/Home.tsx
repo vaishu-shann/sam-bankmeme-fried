@@ -88,7 +88,7 @@ const Content: FC = () => {
                 </div>
                 <div className="hero-desc">
                     "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
-                    claim site as a convenient way for to gift you some $SBF tokens. We CAN make it all back."
+                    claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back."
                 </div>
                 <div className="eligibility-cta" onClick={createCounter}>
                     Check Eligibility

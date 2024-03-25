@@ -5,7 +5,7 @@ const AdminPage = () => {
   return (
     <div>
               <div className="header">
-                <img src="./img/Logo.png" alt="navbarImage" className="header-logo" />
+                <img src="./img/logo-sbf.png" alt="navbarImage" className="header-logo" />
                 <div className="nav-flex">                    
                 <WalletMultiButton />
                 </div>

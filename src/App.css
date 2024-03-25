@@ -13,7 +13,7 @@
 }
 .header-logo {
     width: auto;
-    height: 100px;
+    height: 70px;
 }
 .hero-section {
     max-width: 1200px;
@@ -266,7 +266,7 @@ textarea {
 
 @media screen and (max-width:960px) {
     .header-logo{
-        height: 70px;
+        height: 40px;
         /* */
     }
     .header, .hero-section{

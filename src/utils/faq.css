@@ -29,8 +29,8 @@
 
 .card-wrapper {
     /* min-height: 100vh; */
-    padding-bottom: 50px; /* footer fixed */
-    padding-top: 25px;
+    padding-bottom: 30px; /* footer fixed */
+    /* padding-top: 25px; */
 }
 
 p {

@@ -9,9 +9,10 @@ const Contract = () => {
                 </div>
 
                 <div className="cont-addr">FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M</div>
-            <img src="./img/bg-removed.png" alt="" className='cs-img2' />
+            {/* <img src="./img/bg-removed.png" alt="" className='cs-img2' /> */}
 
             </div>
+            <div style={{paddingBottom:20}} />
         </>
     );
 };

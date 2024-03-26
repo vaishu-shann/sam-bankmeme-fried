@@ -12,8 +12,8 @@ const ClaimPage = () => {
 
     <Home/>
     <Socials/>
-    <Contract/>
     <FAQ/>
+    <Contract/>
     <Footer/>
     </>
   )

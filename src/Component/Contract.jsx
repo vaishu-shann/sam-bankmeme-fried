@@ -12,7 +12,6 @@ const Contract = () => {
             <img src="./img/bg-removed.png" alt="" className='cs-img2' />
 
             </div>
-            <div style={{ paddingBottom: 80 }} />
         </>
     );
 };

@@ -85,10 +85,11 @@ h2 {
     font-size: 32px;
     text-align: center;
     color: var(--primary-dark-color);
+    margin: 0;
 }
 
 .faq-accordion {
-    padding: 8px 0;
+    /* padding: 3px 0; */
     border-bottom: 1px solid #40414429;
 }
 input.tgg-title {

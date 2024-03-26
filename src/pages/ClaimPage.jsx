@@ -10,10 +10,8 @@ const ClaimPage = () => {
   return (
     <>
 
-    {/* <HeroSection/> */}
     <Home/>
     <Socials/>
-    <MarqueeSection/>
     <Contract/>
     <FAQ/>
     <Footer/>

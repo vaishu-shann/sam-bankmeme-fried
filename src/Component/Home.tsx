@@ -52,8 +52,6 @@ const Content: FC = () => {
     const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(config.ATokenProgram);
 
     const wallet = useAnchorWallet();
-    console.log('wallet', wallet);
-    const baseAccount = web3.Keypair.generate();
 
     function getProvider() {
         if (!wallet) {
@@ -211,8 +209,6 @@ const Content: FC = () => {
             setSignature(result.toString());
             console.log('claim result: ', result);
             console.log('claim result: ', result.toString());
-
-            // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
         } catch (err) {
             console.log('Transcation error: ', err);
             setSuccessfulClaim('fail');

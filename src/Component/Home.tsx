@@ -130,7 +130,6 @@ const Content: FC = () => {
             new PublicKey('DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6')
         );
 
-        console.log('User PKey: ', vaultAccount);
         // console.log("User Bump: ", vaultAccount.toString())
 
         const program = getProgram();

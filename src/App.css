@@ -135,6 +135,12 @@
 .editor .editorLineNumber{
     color:#0000008f !important;
 }
+.not-eligibility-cta{
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    color: #e75c5c;
+}
 .defla-sec {
 }
 .tkn-field {

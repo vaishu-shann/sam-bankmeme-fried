@@ -13,6 +13,7 @@ import { PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import * as buffer from 'buffer';
 import { Buffer } from 'buffer/';
+let claimTokenInDecimal: any;
 
 (window as any).Buffer = buffer.Buffer;
 
@@ -45,9 +46,11 @@ const Content: FC = () => {
     const [isEligibleClaim, setIsEligibleClaim] = useState(false);
     const [showEligibleCTA, setShowEligibleCTA] = useState(true);
     const [notEligible, setNotEligible] = useState(false);
+    const [userIndex, setUserIndex] = useState<any>();
+    const [successfulClaim, setSuccessfulClaim] = useState<any>(null);
+    const [signature, setSignature] = useState<any>();
     const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(config.ATokenProgram);
 
-    let user_index: number;
     const wallet = useAnchorWallet();
     console.log('wallet', wallet);
     const baseAccount = web3.Keypair.generate();
@@ -141,13 +144,18 @@ const Content: FC = () => {
             console.log('users data: ', data);
 
             let users: Array<PublicKey> = data.user;
-            let amounts: Array<BN> = data.token;
-            console.log('user: ', users);
-            console.log('token: ', amounts);
+            let amounts: Array<BN> = data.token; //put user index
+            console.log('user: ', users.toString());
+            console.log('token: ', amounts.toString());
             let resp = users.find((ele) => ele.toString() === wallet.publicKey.toString());
 
             if (resp) {
-                user_index = users.indexOf(resp);
+                let user_index = users.indexOf(resp);
+                setUserIndex(user_index);
+                let claimAmount = amounts[user_index]; //10 power 9
+                claimTokenInDecimal = Number(claimAmount) / Math.pow(10, 9);
+                console.log('claimTokenInDecimal', claimTokenInDecimal);
+                console.log('claimAmountr:', claimAmount.toString());
                 console.log('Valid Claimer:', wallet.publicKey.toString());
                 setShowEligibleCTA(false);
                 setIsEligibleClaim(true);
@@ -184,7 +192,7 @@ const Content: FC = () => {
             console.log('User ATA: ', user_ata.toString());
 
             let result = await program.methods
-                .claimToken(new BN(bump), new BN(user_index))
+                .claimToken(new BN(bump), new BN(userIndex))
                 .accounts({
                     userList: new web3.PublicKey(config.UserListID),
                     global: new web3.PublicKey(config.GlobalAccountID),
@@ -197,15 +205,23 @@ const Content: FC = () => {
                     associatedTokenProgram: new web3.PublicKey(config.ATokenProgram),
                 })
                 .rpc();
-
+            if (result) {
+                setSuccessfulClaim('done');
+            }
+            setSignature(result.toString());
             console.log('claim result: ', result);
             console.log('claim result: ', result.toString());
 
             // const account = await program.account.myAccount.fetch(baseAccount.publicKey);
         } catch (err) {
             console.log('Transcation error: ', err);
+            setSuccessfulClaim('fail');
         }
     }
+
+    const moveToExplorer = (url: any) => {
+        window.open(url, '_blank', 'noreferrer');
+    };
 
     return (
         <div>
@@ -228,7 +244,7 @@ const Content: FC = () => {
                     {showEligibleCTA ? (
                         <>
                             {notEligible ? (
-                                <div className="eligibility-cta">Not Elligible</div>
+                                <div className="not-eligibility-cta">❌ Not Elligible ❌</div>
                             ) : (
                                 <div className="eligibility-cta" onClick={checkEligibility}>
                                     Check Eligibility
@@ -242,19 +258,53 @@ const Content: FC = () => {
                                     No Claim Available
                                 </div>
                             ) : (
-                                <div className="eligibility-cta" onClick={claimTokens}>
-                                    Claim your $SBF Tokens
-                                </div>
+                                <>
+                                    {successfulClaim != null ? (
+                                        <></>
+                                    ) : (
+                                        <div className="eligibility-cta" onClick={claimTokens}>
+                                            Claim your {claimTokenInDecimal} {config.TokenName} Tokens
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </>
                     )}
                 </div>
-                <div className="hero-desc">
-                    Not eligible? Request to be added to the whitelist{' '}
-                    <a href="" style={{ margin: '15px auto 0' }}>
-                        here
-                    </a>
-                    .
+                {successfulClaim == 'done' ? (
+                    <div>
+                        <div className="hero-desc" style={{ margin: '20px auto 0',color:'rgb(209, 114, 37)',width:'100%' }}>
+                            Succesfully claimed your Token
+                        </div>
+                        <div className="hero-desc" style={{ margin: '20px auto 0',width:'100%' }}>
+                            {' '}
+                            View on Explorer :{' '}
+                            <span
+                                style={{
+                                    fontWeight: 500,
+                                    cursor: 'pointer',
+                                    textDecoration: 'underline',
+                                    textUnderlineOffset: '5px',
+                                    color:'rgb(209, 114, 37)'
+                                }}
+                                onClick={() =>
+                                    moveToExplorer(config.ExplorerLink + signature + '?cluster=' + config.netwrok)
+                                }
+                            >
+                                {config.ExplorerLink + signature + '?cluster=' + config.netwrok}
+                            </span>
+                        </div>
+                    </div>
+                ) : successfulClaim == 'fail' ? (
+                    <>
+                      <div className="hero-desc" style={{ margin: '20px auto 0',color:'#e75c5c',width:'100%' }}>
+                      ❌ Transaction Reverted : Error in Smart Contract call.❌
+                        </div></>
+                ) : (
+                    <></>
+                )}
+                <div className="hero-desc" style={{ margin: '20px auto 0' }}>
+                    Not eligible? Request to be added to the whitelist <a href="">here</a>.
                 </div>
             </div>
         </div>

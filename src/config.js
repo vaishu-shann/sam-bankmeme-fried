@@ -12,6 +12,9 @@ const config = {
     ATokenProgram: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
     TokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     SystemProgram: "11111111111111111111111111111111",
-    netwrok: "devnet"
+    netwrok: "devnet",
+    TokenName:"SBF",
+    TokenDecimals:9,
+    ExplorerLink:'https://explorer.solana.com/tx/'
 }
 export default config;

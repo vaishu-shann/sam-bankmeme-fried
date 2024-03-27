@@ -8,15 +8,13 @@ import React, { FC, ReactNode, useMemo, useState } from 'react';
 import idl from '../services/idl.json';
 import config from '../config';
 
-
 // test
 import { PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import * as buffer from "buffer";
+import * as buffer from 'buffer';
 import { Buffer } from 'buffer/';
 
-window.Buffer = buffer.Buffer;
-
+(window as any).Buffer = buffer.Buffer;
 
 const Home: FC = () => {
     return (
@@ -46,10 +44,8 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 const Content: FC = () => {
     const [isEligibleClaim, setIsEligibleClaim] = useState(false);
     const [showEligibleCTA, setShowEligibleCTA] = useState(true);
-
-    const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(
-        config.ATokenProgram
-    );
+    const [notEligible, setNotEligible] = useState(false);
+    const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(config.ATokenProgram);
 
     let user_index: number;
     const wallet = useAnchorWallet();
@@ -97,7 +93,7 @@ const Content: FC = () => {
             console.log('Transcation error: ', err);
         }
     }
-    
+
     async function checkEligibility() {
         // let list_ata = PublicKey.findProgramAddressSync(
         //     [
@@ -130,10 +126,11 @@ const Content: FC = () => {
         // console.log("User ATA: ", user_ata.toString())
 
         const vaultAccount = await PublicKey.findProgramAddress(
-            [Buffer.from("list")], new PublicKey("DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6")
+            [Buffer.from('list')],
+            new PublicKey('DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6')
         );
 
-        console.log("User PKey: ", vaultAccount)
+        console.log('User PKey: ', vaultAccount);
         // console.log("User Bump: ", vaultAccount.toString())
 
         const program = getProgram();
@@ -141,14 +138,14 @@ const Content: FC = () => {
             return;
         }
         try {
-            let data : any = await program.account.user.fetch(config.UserListID);
+            let data: any = await program.account.user.fetch(config.UserListID);
             console.log('users data: ', data);
-            
-            let users : Array<PublicKey> = data.user;
-            let amounts : Array<BN> = data.token;
+
+            let users: Array<PublicKey> = data.user;
+            let amounts: Array<BN> = data.token;
             console.log('user: ', users);
             console.log('token: ', amounts);
-            let resp = users.find(ele =>  ele.toString() === wallet.publicKey.toString())
+            let resp = users.find((ele) => ele.toString() === wallet.publicKey.toString());
 
             if (resp) {
                 user_index = users.indexOf(resp);
@@ -157,6 +154,7 @@ const Content: FC = () => {
                 setIsEligibleClaim(true);
             } else {
                 console.log('Invalid Claimer: ', wallet.publicKey.toString());
+                setNotEligible(true);
             }
         } catch (err) {
             console.log('Transcation error: ', err);
@@ -169,10 +167,8 @@ const Content: FC = () => {
             return;
         }
         try {
-            const user_key = await PublicKey.findProgramAddress(
-                [Buffer.from("list")], new PublicKey(config.ProgramID)
-            );
-            let bump = user_key[1]
+            const user_key = await PublicKey.findProgramAddress([Buffer.from('list')], new PublicKey(config.ProgramID));
+            let bump = user_key[1];
 
             let user_ata = PublicKey.findProgramAddressSync(
                 [
@@ -186,19 +182,22 @@ const Content: FC = () => {
                 // solan associated token program
                 SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
             )[0];
-            console.log("User ATA: ", user_ata.toString())
+            console.log('User ATA: ', user_ata.toString());
 
-            let result = await program.methods.claimToken(new BN(bump), new BN(user_index)).accounts({
-                userList: new web3.PublicKey(config.UserListID),
-                global: new web3.PublicKey(config.GlobalAccountID),
-                user: wallet.publicKey,
-                mint: new web3.PublicKey(config.TokenMintID),
-                userAta: user_ata,
-                listAta: new web3.PublicKey(config.UserListATA),
-                systemProgram: new web3.PublicKey(config.SystemProgram),
-                tokenProgram: new web3.PublicKey(config.TokenProgram),
-                associatedTokenProgram: new web3.PublicKey(config.ATokenProgram)
-            }).rpc();
+            let result = await program.methods
+                .claimToken(new BN(bump), new BN(user_index))
+                .accounts({
+                    userList: new web3.PublicKey(config.UserListID),
+                    global: new web3.PublicKey(config.GlobalAccountID),
+                    user: wallet.publicKey,
+                    mint: new web3.PublicKey(config.TokenMintID),
+                    userAta: user_ata,
+                    listAta: new web3.PublicKey(config.UserListATA),
+                    systemProgram: new web3.PublicKey(config.SystemProgram),
+                    tokenProgram: new web3.PublicKey(config.TokenProgram),
+                    associatedTokenProgram: new web3.PublicKey(config.ATokenProgram),
+                })
+                .rpc();
 
             console.log('claim result: ', result);
             console.log('claim result: ', result.toString());
@@ -228,9 +227,15 @@ const Content: FC = () => {
                 </div>
                 <div className="hero-section">
                     {showEligibleCTA ? (
-                        <div className="eligibility-cta" onClick={checkEligibility}>
-                            Check Eligibility
-                        </div>
+                        <>
+                            {notEligible ? (
+                                <div className="eligibility-cta">Not Elligible</div>
+                            ) : (
+                                <div className="eligibility-cta" onClick={checkEligibility}>
+                                    Check Eligibility
+                                </div>
+                            )}
+                        </>
                     ) : (
                         <>
                             {!isEligibleClaim ? (
@@ -239,14 +244,18 @@ const Content: FC = () => {
                                 </div>
                             ) : (
                                 <div className="eligibility-cta" onClick={claimTokens}>
-                                    Claim your 500 $SBF Tokens
+                                    Claim your $SBF Tokens
                                 </div>
                             )}
                         </>
                     )}
                 </div>
                 <div className="hero-desc">
-                Not eligible? Request to be added to the whitelist <a href='' style={{margin:"15px auto 0"}}>here</a>.
+                    Not eligible? Request to be added to the whitelist{' '}
+                    <a href="" style={{ margin: '15px auto 0' }}>
+                        here
+                    </a>
+                    .
                 </div>
             </div>
         </div>

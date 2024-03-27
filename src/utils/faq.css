@@ -116,6 +116,7 @@ input.tgg-title {
 }
 
 .faq-accordion-content {
+    /* text-indent: 50px; */
     color: var(--neutral-soft-color);
     overflow: hidden;
     max-height: 0;

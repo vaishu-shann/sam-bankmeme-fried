@@ -223,8 +223,8 @@ const Content: FC = () => {
                     <img src="./img/Hero-Img.png" alt="hero-image" className="floating" />
                 </div>
                 <div className="hero-desc">
-                    "Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
-                    claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back."
+                    Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
+                    claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back.
                 </div>
                 <div className="hero-section">
                     {showEligibleCTA ? (
@@ -244,6 +244,9 @@ const Content: FC = () => {
                             )}
                         </>
                     )}
+                </div>
+                <div className="hero-desc">
+                Not eligible? Request to be added to the whitelist <a href='' style={{margin:"15px auto 0"}}>here</a>.
                 </div>
             </div>
         </div>

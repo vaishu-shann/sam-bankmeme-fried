@@ -34,10 +34,10 @@ const FAQ = () => {
 
                                 <div class="faq-accordion-content">
                                     <p>
-                                        The decision to launch a token airdrop claim site came down to two main reasons.
+                                   
                                         First, the recent spike in activity levels on Solana has led to limitations with
                                         Solana RPC, making it nearly impossible for us to distribute tokens directly to
-                                        a large number of wallets efficiently. Secondly, recognizing a gap in the market
+                                        a large number of wallets efficiently.<br/><br/> Secondly, recognizing a gap in the market
                                         for reliable airdrop claim platforms, we took the initiative to develop one
                                         specifically for Solana projects. This new platform will operate under a brand
                                         separate from Sam for clarity and to maintain focus on providing a seamless

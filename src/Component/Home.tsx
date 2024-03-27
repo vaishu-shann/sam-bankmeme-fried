@@ -151,7 +151,7 @@ const Content: FC = () => {
                 let user_index = users.indexOf(resp);
                 setUserIndex(user_index);
                 let claimAmount = amounts[user_index]; //10 power 9
-                claimTokenInDecimal = Number(claimAmount) / Math.pow(10, 9);
+                claimTokenInDecimal = Number(claimAmount) / Math.pow(10, config.TokenDecimals);
                 console.log('claimTokenInDecimal', claimTokenInDecimal);
                 console.log('claimAmountr:', claimAmount.toString());
                 console.log('Valid Claimer:', wallet.publicKey.toString());

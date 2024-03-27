@@ -1,5 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { SiHiveBlockchain } from 'react-icons/si';
+
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
+import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { Program, AnchorProvider, web3, BN } from '@project-serum/anchor';
+import { clusterApiUrl, Connection } from '@solana/web3.js';
+import React, { FC, ReactNode, useMemo, useState ,useEffect} from 'react';
+import idl from '../services/idl.json';
+import config from '../config';
 import { BiWallet, BiError } from 'react-icons/bi';
 import { BsFiletypeCsv } from 'react-icons/bs';
 import { TbLockAccess } from 'react-icons/tb';
@@ -12,21 +20,14 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import { FaCopy } from 'react-icons/fa6';
 import copy from 'copy-to-clipboard';
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
-
+import { PublicKey } from '@solana/web3.js';
+import * as buffer from 'buffer';
 let TokenSymbol = '';
 
-const code = `
-
-
-
-
-
-`;
-const codeExample = `0xB97B5A0A56CC62bDCAB73C2356Dec06509cDC760,0.000056
-0xC8c30Fa803833dD1Fd6DBCDd91Ed0b301EFf87cF,13.45
-0x7D52422D3A5fE9bC92D3aE8167097eE09F1b347d,1.049
-0x64c9525A3c3a65Ea88b06f184F074C2499578A7E`;
+const code = ``;
+const codeExample = `A5xb3WyAZRbwM8NfcXocdv5JUHZREDsF2acBKC54t82S,4.0056
+Agpew1jK6nD14N6SbM8FvMYhQs9Jv7w6s24r7KkhDDr3,8.45
+7tDsvpnu7afxXXLzCfUhFag1wfQbMC91z5acAZFqtZhm,10.049`;
 
 const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
@@ -34,7 +35,36 @@ const hightlightWithLineNumbers = (input, language) =>
         .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
         .join('\n');
 
-function Multisender() {
+
+(window ).Buffer = buffer.Buffer;
+
+const AdminPage = () => {
+    return (
+        <Context>
+            <Content />
+        </Context>
+    );
+};
+
+export default AdminPage;
+
+const Context = ({ children }) => {
+    const network = WalletAdapterNetwork.Devnet;
+
+    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+
+    const wallets = useMemo(() => [new PhantomWalletAdapter()], [network]);
+
+    return (
+        <ConnectionProvider endpoint={endpoint}>
+            <WalletProvider wallets={wallets} autoConnect>
+                <WalletModalProvider>{children}</WalletModalProvider>
+            </WalletProvider>
+        </ConnectionProvider>
+    );
+};
+const Content = () => {
+    const wallet = useAnchorWallet();
     const walletAddress = useAnchorWallet();
     const [codeValue, setCodeValue] = useState(code);
     const [codeValueExample, setCodeValueExample] = useState(codeExample);
@@ -42,9 +72,11 @@ function Multisender() {
     const [modal1Open, setModal1Open] = useState(false);
     const [modal2Open, setModal2Open] = useState(false);
     const [loadingText, setLoadingText] = useState();
-    const [totalAmount, setTotalAmount] = useState(0);
     const [totalSenders, setTotalSenders] = useState(0);
-    const [tokenAddress, setTokenAddress] = useState();
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [toAddressArray, setToAddressArray] = useState([]);
+    const [amountArray, setAmountArray] = useState([]);
+    const [successfulSend, setSuccessfulSend] = useState();
 
     const copyToClipboard = () => {
         setCopyCode(true);
@@ -73,7 +105,42 @@ function Multisender() {
         scrollToTop();
     }, []);
 
-    const onMultiSend = async () => {};
+    const onMultiSend = async () => {
+        try{
+            console.log("code value", codeValue);
+            let total_amount = 0;
+            let amount_array = [];
+            let toAddress_array = [];
+            let total_senders = 0;
+            let senders = codeValue.split("\n");
+            for (let index = 0; index < senders.length; index++) {
+              const sender = senders[index];
+              let value = sender.split(",");
+    
+                toAddress_array.push(new PublicKey(value[0]) );
+      
+                console.log("toAddress_array", toAddress_array);
+    
+                amount_array.push(new BN(value[1]*Math.pow(10,config.TokenDecimals)));
+      
+                console.log("amount_array", amount_array);
+      
+                if (value[1] > 0) {  
+                  total_amount += Number(value[1]);
+                  setTotalAmount(total_amount)
+                  total_senders++;
+                  setTotalSenders(total_senders)
+                }
+              
+            }
+            setToAddressArray(toAddress_array)
+            setAmountArray(amount_array)
+            await updateUser();
+        }catch(err){
+            console.log("error in onMultiSend" , err)
+        }
+        
+    };
 
     const onDeployClick = async () => {
         try {
@@ -91,8 +158,69 @@ function Multisender() {
     const closeModal2 = () => {
         setModal2Open(false);
     };
+
+
+    function getProvider() {
+        if (!wallet) {
+            return null;
+        }
+
+        const connection = new Connection(web3.clusterApiUrl('devnet'), 'confirmed');
+        const provider = new AnchorProvider(connection, wallet, {
+            preflightCommitment: 'confirmed',
+        });
+
+        return provider;
+    }
+
+    function getProgram() {
+        const provider = getProvider();
+        if (!provider) {
+            return;
+        }
+
+        const prog_idl = JSON.parse(JSON.stringify(idl));
+        const program = new Program(prog_idl, config.ProgramID, provider);
+        return program;
+    }
+
+
+    async function updateUser() {
+        const program = getProgram();
+        if (!program || !wallet) {
+            return;
+        }
+        try {
+            let result = await program.methods
+                .updateUsers(toAddressArray,amountArray)
+                .accounts({
+                    userList: new web3.PublicKey(config.UserListID),
+                    global: new web3.PublicKey(config.GlobalAccountID),
+                    owner: wallet.publicKey,
+                })
+                .rpc();
+            if (result) {
+                setSuccessfulSend('done');
+            }
+            // setSignature(result.toString());
+            console.log('claim result: ', result);
+            console.log('claim result: ', result.toString());
+        } catch (err) {
+            console.log('Transcation error: ', err);
+            setSuccessfulSend('fail');
+        }
+    }
+
     return (
-        <div className="ms-sec">
+        <div>
+            <div>
+                <div className="header">
+                    <img src="./img/logo-sbf.png" alt="navbarImage" className="header-logo" />
+                    <div className="nav-flex">
+                        <WalletMultiButton />
+                    </div>
+                </div>
+                <div className="ms-sec">
             <div className="Heading">$SBF Token - Multisender</div>
             <div className="tkn-addr">
                 <div
@@ -123,7 +251,7 @@ function Multisender() {
                         </IconContext.Provider>
                         <div className="sub-head">Token Address</div>
                     </div>
-                    <div className="sub-head">Balance: --</div>
+                    {/* <div className="sub-head">Balance: --</div> */}
                 </div>
                 <input
                     placeholder="Please enter the token address"
@@ -188,83 +316,14 @@ function Multisender() {
                 Continue
             </button>
 
-            <Modal
-                className="popup-modal"
-                title={'MultiSender Detail'}
-                centered
-                open={modal1Open}
-                onOk={() => setModal1Open(false)}
-                onCancel={closeModal}
-                okButtonProps={{ style: { display: 'none' } }}
-                cancelButtonProps={{ style: { display: 'none' } }}
-            >
-                <div style={{ marginTop: 20 }} />
+            {successfulSend == "done" ? <>
+            <div className="hero-desc" style={{ margin: '20px auto 0',color:'rgb(209, 114, 37)',width:'100%' }}>
+                            Succesfully whitelisted {totalSenders} Users for {totalAmount} Tokens.
+                        </div></> : successfulSend=="fail" ? <>
+            <div className="hero-desc" style={{ margin: '20px auto 0',color:'#e75c5c',width:'100%' }}>
+                      ❌ Transaction Reverted : Error in Smart Contract call.❌
+                        </div></> : <></>}
 
-                {loadingText == 'none' && (
-                    <>
-                        <div className="m-head" style={{ paddingBottom: 8 }}>
-                            Total no.of Sender: {totalSenders}
-                        </div>
-                        <div className="m-head" style={{ paddingBottom: 8 }}>
-                            Token Sending: {TokenSymbol}
-                        </div>
-                        <div className="m-head" style={{ paddingBottom: 8 }}>
-                            Total no.of Token: {totalAmount}
-                        </div>
-                        <button className="deploy-cta" style={{ margin: '15px 0 8px' }} onClick={onDeployClick}>
-                            Approve
-                        </button>
-                    </>
-                )}
-                {loadingText == 'success' && (
-                    <>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                            <div className="m-head">Transaction Hash:</div>
-                            <div className="m-desc">Transaction hash </div>
-                        </div>
-
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                marginTop: 10,
-                                marginBottom: 10,
-                            }}
-                        >
-                            <div className="m-head" style={{ paddingBottom: 5 }}>
-                                View inExplorer:{' '}
-                            </div>
-                            link to explorer
-                        </div>
-                    </>
-                )}
-                {loadingText == 'error' && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <IconContext.Provider
-                            value={{
-                                size: '4em',
-                                color: 'tomato',
-                                className: 'global-class-name',
-                            }}
-                        >
-                            <div style={{ marginBottom: 8, marginTop: 15 }}>
-                                <BiError />
-                            </div>
-                        </IconContext.Provider>
-                        <div className="m-head" style={{ paddingBottom: 15, color: '#fff', textAlign: 'center' }}>
-                            Error while sending the token. Please check the values entered and Try again !
-                        </div>
-                    </div>
-                )}
-            </Modal>
             <Modal
                 className="popup-modal"
                 title={''}
@@ -310,7 +369,7 @@ function Multisender() {
                 <div style={{ marginTop: 20 }} />
             </Modal>
         </div>
+            </div>
+        </div>
     );
-}
-
-export default Multisender;
+};

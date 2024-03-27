@@ -6,7 +6,7 @@ const Socials = () => {
       };
     return (
         <div className="social-section">
-            <div className="card"  onClick={() => openInNewTab("https://jup.ag/swap/SOL-SBF_FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M")}>
+            <div className="card"  onClick={() => openInNewTab("https://jup.ag/swap/SOL-SBF")}>
                 <div class="content">
                     <div class="back">
                         <div class="back-content">

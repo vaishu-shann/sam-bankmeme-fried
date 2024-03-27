@@ -1,16 +1,13 @@
 import React from 'react';
 
 const FAQ = () => {
+
     return (
         <>
             <div class="card-wrapper  | content-cc">
                 <div class="faq-card">
                     <div class="faq-ilustrations">
-                        <img
-                            class="mobile pattern"
-                            src="./img/Logo.png"
-                        />
-
+                        <img class="mobile pattern" src="./img/Logo.png" />
                     </div>
 
                     <main class="faq-content">
@@ -34,14 +31,14 @@ const FAQ = () => {
 
                                 <div class="faq-accordion-content">
                                     <p>
-                                   
                                         First, the recent spike in activity levels on Solana has led to limitations with
                                         Solana RPC, making it nearly impossible for us to distribute tokens directly to
-                                        a large number of wallets efficiently.<br/><br/> Secondly, recognizing a gap in the market
-                                        for reliable airdrop claim platforms, we took the initiative to develop one
-                                        specifically for Solana projects. This new platform will operate under a brand
-                                        separate from Sam for clarity and to maintain focus on providing a seamless
-                                        airdrop experience.
+                                        a large number of wallets efficiently.
+                                        <br />
+                                        <br /> Secondly, recognizing a gap in the market for reliable airdrop claim
+                                        platforms, we took the initiative to develop one specifically for Solana
+                                        projects. This new platform will operate under a brand separate from Sam for
+                                        clarity and to maintain focus on providing a seamless airdrop experience.
                                     </p>
                                 </div>
                             </article>
@@ -61,9 +58,17 @@ const FAQ = () => {
                                 <div class="faq-accordion-content">
                                     <p>
                                         Your security is a top priority for us. To ensure the authenticity and safety of
-                                        the airdrop claim, we've linked the claim page directly to our official domain
-                                        (<a href='www.sambankmeme.com/claim' target='_blank'> www.sambankmeme.com/claim </a> or <a href='claim.sambankmeme.com' target='_blank'>claim.sambankmeme.com</a>). This step is taken to
-                                        assure our community members that the site is managed by our trusted developers.
+                                        the airdrop claim, we've linked the claim page directly to our official domain (
+                                        <a href="www.sambankmeme.com/claim" target="_blank">
+                                            {' '}
+                                            www.sambankmeme.com/claim{' '}
+                                        </a>{' '}
+                                        or{' '}
+                                        <a href="claim.sambankmeme.com" target="_blank">
+                                            claim.sambankmeme.com
+                                        </a>
+                                        ). This step is taken to assure our community members that the site is managed
+                                        by our trusted developers.
                                     </p>
                                 </div>
                             </article>

@@ -57,18 +57,20 @@ const FAQ = () => {
 
                                 <div class="faq-accordion-content">
                                     <p>
-                                        Your security is a top priority for us. To ensure the authenticity and safety of
-                                        the airdrop claim, we've linked the claim page directly to our official domain (
+
+                                    Your security is a top priority for us. To ensure the authenticity and safety of the airdrop claim, we've linked the claim page directly to our official domain ( 
                                         <a href="www.sambankmeme.com/claim" target="_blank">
                                             {' '}
-                                            www.sambankmeme.com/claim{' '}
+                                            www.sambankmeme.com/claim
                                         </a>{' '}
                                         or{' '}
                                         <a href="claim.sambankmeme.com" target="_blank">
                                             claim.sambankmeme.com
                                         </a>
-                                        ). This step is taken to assure our community members that the site is managed
-                                        by our trusted developers.
+                                        ).<br/><br/>
+                                        This step is taken to assure our community members that the site is managed by our trusted developers.<br/><br/>
+                                        As a precaution, you are always welcome to set up a new wallet specifically for all future $SBF airdrops moving forward.
+                                        
                                     </p>
                                 </div>
                             </article>

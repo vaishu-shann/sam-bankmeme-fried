@@ -232,9 +232,9 @@ const Content: FC = () => {
                 <div className="avatar">
                     <img src="./img/Hero-Img.png" alt="hero-image" className="floating" />
                 </div>
-                <div className="hero-desc">
-                    Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up a token airdrop
-                    claim site as a convenient way to gift you some $SBF tokens. We CAN make it all back.
+                <div className="hero-desc">                    
+                    Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up this claim site for ALL future
+                    $SBF airdrops moving forward. Together, we CAN make it all back.
                 </div>
                 <div className="hero-section">
                     {showEligibleCTA ? (
@@ -269,10 +269,13 @@ const Content: FC = () => {
                 </div>
                 {successfulClaim == 'done' ? (
                     <div>
-                        <div className="hero-desc" style={{ margin: '20px auto 0',color:'rgb(209, 114, 37)',width:'100%' }}>
+                        <div
+                            className="hero-desc"
+                            style={{ margin: '20px auto 0', color: 'rgb(209, 114, 37)', width: '100%' }}
+                        >
                             Succesfully claimed your Token
                         </div>
-                        <div className="hero-desc" style={{ margin: '20px auto 0',width:'100%' }}>
+                        <div className="hero-desc" style={{ margin: '20px auto 0', width: '100%' }}>
                             {' '}
                             View on Explorer :{' '}
                             <span
@@ -281,7 +284,7 @@ const Content: FC = () => {
                                     cursor: 'pointer',
                                     textDecoration: 'underline',
                                     textUnderlineOffset: '5px',
-                                    color:'rgb(209, 114, 37)'
+                                    color: 'rgb(209, 114, 37)',
                                 }}
                                 onClick={() =>
                                     moveToExplorer(config.ExplorerLink + signature + '?cluster=' + config.netwrok)
@@ -293,14 +296,16 @@ const Content: FC = () => {
                     </div>
                 ) : successfulClaim == 'fail' ? (
                     <>
-                      <div className="hero-desc" style={{ margin: '20px auto 0',color:'#e75c5c',width:'100%' }}>
-                      ❌ Transaction Reverted : Error in Smart Contract call.❌
-                        </div></>
+                        <div className="hero-desc" style={{ margin: '20px auto 0', color: '#e75c5c', width: '100%' }}>
+                            ❌ Transaction Reverted : Error in Smart Contract call.❌
+                        </div>
+                    </>
                 ) : (
                     <></>
                 )}
-                <div className="hero-desc" style={{ margin: '20px auto 0',fontSize:15 }}>
-                    Not eligible? <br/>Request to be added to the whitelist <a href="">here</a>.
+                <div className="hero-desc" style={{ margin: '20px auto 0', fontSize: 15 }}>
+                    Not eligible? <br />
+                    Request to be added to the whitelist <a href="">here</a>.
                 </div>
             </div>
         </div>

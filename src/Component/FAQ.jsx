@@ -1,7 +1,6 @@
 import React from 'react';
 
 const FAQ = () => {
-
     return (
         <>
             <div class="card-wrapper  | content-cc">
@@ -48,6 +47,28 @@ const FAQ = () => {
 
                                 <div class="faq-accordion-title">
                                     <label for="tgg-title-2">
+                                        <h2>I own a Saga smartphone. Why am I not eligible for this airdrop? </h2>
+                                        <span class="arrow-icon">
+                                            <img src="https://raw.githubusercontent.com/Romerof/FAQ-accordion-card/main/images/icon-arrow-down.svg" />
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="faq-accordion-content">
+                                    <p>
+                                        In order to conserve Solana rent fees, we have filtered the ~127k Saga addresses
+                                        for 'active' wallets first, given many wallets may not ever be used. If we have
+                                        not included you on the whitelist, you can request to be added here [link].
+                                        We'll typically process your requests within 48-72 hours.
+                                    </p>
+                                </div>
+                            </article>
+
+                            <article class="faq-accordion">
+                                <input type="checkbox" class="tgg-title" id="tgg-title-2" />
+
+                                <div class="faq-accordion-title">
+                                    <label for="tgg-title-2">
                                         <h2>How do I know the claim site is actually secure?</h2>
                                         <span class="arrow-icon">
                                             <img src="https://raw.githubusercontent.com/Romerof/FAQ-accordion-card/main/images/icon-arrow-down.svg" />
@@ -57,8 +78,8 @@ const FAQ = () => {
 
                                 <div class="faq-accordion-content">
                                     <p>
-
-                                    Your security is a top priority for us. To ensure the authenticity and safety of the airdrop claim, we've linked the claim page directly to our official domain ( 
+                                        Your security is a top priority for us. To ensure the authenticity and safety of
+                                        the airdrop claim, we've linked the claim page directly to our official domain (
                                         <a href="www.sambankmeme.com/claim" target="_blank">
                                             {' '}
                                             www.sambankmeme.com/claim
@@ -67,10 +88,15 @@ const FAQ = () => {
                                         <a href="claim.sambankmeme.com" target="_blank">
                                             claim.sambankmeme.com
                                         </a>
-                                        ).<br/><br/>
-                                        This step is taken to assure our community members that the site is managed by our trusted developers.<br/><br/>
-                                        As a precaution, you are always welcome to set up a new wallet specifically for all future $SBF airdrops moving forward.
-                                        
+                                        ).
+                                        <br />
+                                        <br />
+                                        This step is taken to assure our community members that the site is managed by
+                                        our trusted developers.
+                                        <br />
+                                        <br />
+                                        As a precaution, you are always welcome to set up a new wallet specifically for
+                                        all future $SBF airdrops moving forward.
                                     </p>
                                 </div>
                             </article>

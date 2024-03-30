@@ -305,7 +305,7 @@ const Content: FC = () => {
                 )}
                 <div className="hero-desc" style={{ margin: '20px auto 0', fontSize: 15 }}>
                     Not eligible? <br />
-                    Request to be added to the whitelist <a href="">here</a>.
+                    Submit your Saga wallet address <a href="">here</a>.
                 </div>
             </div>
         </div>

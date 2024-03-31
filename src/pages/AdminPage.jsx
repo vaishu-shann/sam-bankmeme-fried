@@ -406,7 +406,7 @@ const onEndClaim=async() =>{}
                             End Claim
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 25, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
+                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
                         Once you end the claim, there is no going back. Please be certain.
                         </div>
                         <input className="mdl-ipt-txt" onClick={(e)=>setEndCTA(e.target.value)}/>
@@ -427,7 +427,7 @@ const onEndClaim=async() =>{}
                             Revoke Tokens
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 25, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
+                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
                         Once you revoke the tokens, there is no going back. Please be certain.
                         </div>
                         <input className="mdl-ipt-txt" onClick={(e)=>setRevokeCTA(e.target.value)}/>

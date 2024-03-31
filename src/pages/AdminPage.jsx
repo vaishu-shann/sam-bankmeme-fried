@@ -210,6 +210,9 @@ const Content = () => {
         }
     }
 
+const onRevokeToken=async() =>{}
+const onEndClaim=async() =>{}
+
     return (
         <div>
             <div>
@@ -408,7 +411,7 @@ const Content = () => {
                         </div>
                         <input className="mdl-ipt-txt" onClick={(e)=>setEndCTA(e.target.value)}/>
 
-                        <button className="mdl-button">End Claim</button>
+                        <button className="mdl-button" onClick={onEndClaim}>End Claim</button>
                     </Modal>
                     <Modal
                         className="End Claim"
@@ -429,7 +432,7 @@ const Content = () => {
                         </div>
                         <input className="mdl-ipt-txt" onClick={(e)=>setRevokeCTA(e.target.value)}/>
 
-                        <button className="mdl-button">Revoke Tokens</button>
+                        <button className="mdl-button" onClick={onRevokeToken}>Revoke Tokens</button>
                     </Modal>
                 </div>
             </div>

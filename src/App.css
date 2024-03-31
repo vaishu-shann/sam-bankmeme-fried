@@ -74,7 +74,8 @@
 }
 .wallet-adapter-button-trigger {
     background-color: rgb(209, 114, 37) !important;
-
+    line-height: 40px!important;
+    height: auto!important;
 }
 .eligibility-cta {
     margin: auto;
@@ -191,10 +192,10 @@ textarea {
 }
 .csv-button {
     background-color: rgb(209, 114, 37);
-    color: rgb(0, 0, 0);
+    color: #fff;
     font-size: 14px;
-    font-weight: 400;
-    padding: 10px 18px;
+    font-weight: 500;
+    padding: 12px 18px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -340,4 +341,27 @@ textarea {
 }
 .ant-modal .ant-modal-content{
     background-color: #e6dbca;
+}
+
+.mdl-ipt-txt{
+    border: 0;
+    padding: 10px;
+    width: 95%;
+    margin:0 auto 20px;
+    color: #000;
+    outline: 0;
+border-radius: 4px;
+}
+.mdl-button{
+    background-color: rgb(209, 114, 37);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+margin: auto;
+display: block;
 }

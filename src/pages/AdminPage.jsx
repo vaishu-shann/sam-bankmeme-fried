@@ -1,11 +1,10 @@
-
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { Program, AnchorProvider, web3, BN } from '@project-serum/anchor';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
-import React, { FC, ReactNode, useMemo, useState ,useEffect} from 'react';
+import React, { FC, ReactNode, useMemo, useState, useEffect } from 'react';
 import idl from '../services/idl.json';
 import config from '../config';
 import { BiWallet, BiError } from 'react-icons/bi';
@@ -35,8 +34,7 @@ const hightlightWithLineNumbers = (input, language) =>
         .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
         .join('\n');
 
-
-(window ).Buffer = buffer.Buffer;
+window.Buffer = buffer.Buffer;
 
 const AdminPage = () => {
     return (
@@ -71,12 +69,15 @@ const Content = () => {
     const [copyCode, setCopyCode] = useState(false);
     const [modal1Open, setModal1Open] = useState(false);
     const [modal2Open, setModal2Open] = useState(false);
+    const [modal3Open, setModal3Open] = useState(false);
     const [loadingText, setLoadingText] = useState();
     const [totalSenders, setTotalSenders] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [toAddressArray, setToAddressArray] = useState([]);
     const [amountArray, setAmountArray] = useState([]);
     const [successfulSend, setSuccessfulSend] = useState();
+    const[endCTA,setEndCTA] = useState()
+    const[revokeCTA,setRevokeCTA] = useState()
 
     const copyToClipboard = () => {
         setCopyCode(true);
@@ -106,40 +107,38 @@ const Content = () => {
     }, []);
 
     const onMultiSend = async () => {
-        try{
-            console.log("code value", codeValue);
+        try {
+            console.log('code value', codeValue);
             let total_amount = 0;
             let amount_array = [];
             let toAddress_array = [];
             let total_senders = 0;
-            let senders = codeValue.split("\n");
+            let senders = codeValue.split('\n');
             for (let index = 0; index < senders.length; index++) {
-              const sender = senders[index];
-              let value = sender.split(",");
-    
-                toAddress_array.push(new PublicKey(value[0]) );
-      
-                console.log("toAddress_array", toAddress_array);
-    
-                amount_array.push(new BN(value[1]*Math.pow(10,config.TokenDecimals)));
-      
-                console.log("amount_array", amount_array);
-      
-                if (value[1] > 0) {  
-                  total_amount += Number(value[1]);
-                  setTotalAmount(total_amount)
-                  total_senders++;
-                  setTotalSenders(total_senders)
+                const sender = senders[index];
+                let value = sender.split(',');
+
+                toAddress_array.push(new PublicKey(value[0]));
+
+                console.log('toAddress_array', toAddress_array);
+
+                amount_array.push(new BN(value[1] * Math.pow(10, config.TokenDecimals)));
+
+                console.log('amount_array', amount_array);
+
+                if (value[1] > 0) {
+                    total_amount += Number(value[1]);
+                    setTotalAmount(total_amount);
+                    total_senders++;
+                    setTotalSenders(total_senders);
                 }
-              
             }
-            setToAddressArray(toAddress_array)
-            setAmountArray(amount_array)
+            setToAddressArray(toAddress_array);
+            setAmountArray(amount_array);
             await updateUser();
-        }catch(err){
-            console.log("error in onMultiSend" , err)
+        } catch (err) {
+            console.log('error in onMultiSend', err);
         }
-        
     };
 
     const onDeployClick = async () => {
@@ -151,14 +150,15 @@ const Content = () => {
             return;
         }
     };
-    const closeModal = () => {
+    const closeModal1 = () => {
         setModal1Open(false);
-        window.location.reload();
     };
     const closeModal2 = () => {
         setModal2Open(false);
     };
-
+    const closeModal3 = () => {
+        setModal3Open(false);
+    };
 
     function getProvider() {
         if (!wallet) {
@@ -184,7 +184,6 @@ const Content = () => {
         return program;
     }
 
-
     async function updateUser() {
         const program = getProgram();
         if (!program || !wallet) {
@@ -192,7 +191,7 @@ const Content = () => {
         }
         try {
             let result = await program.methods
-                .updateUsers(toAddressArray,amountArray)
+                .updateUsers(toAddressArray, amountArray)
                 .accounts({
                     userList: new web3.PublicKey(config.UserListID),
                     global: new web3.PublicKey(config.GlobalAccountID),
@@ -217,158 +216,222 @@ const Content = () => {
                 <div className="header">
                     <img src="./img/logo-sbf.png" alt="navbarImage" className="header-logo" />
                     <div className="nav-flex">
+                        <div className="csv-button" onClick={() => setModal1Open(true)}>
+                            End Claim{' '}
+                        </div>
+                        <div className="csv-button" onClick={() => setModal3Open(true)}>Revoke Tokens</div>
                         <WalletMultiButton />
                     </div>
                 </div>
                 <div className="ms-sec">
-            <div className="Heading">$SBF Token - Multisender</div>
-            <div className="tkn-addr">
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: 5,
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 10,
-                        }}
-                    >
-                        <IconContext.Provider
-                            value={{
-                                size: '1.2em',
-                                color: 'rgb(139 149 169)',
-                                className: 'global-class-name',
+                    <div className="Heading">$SBF Token - Multisender</div>
+                    <div className="tkn-addr">
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: 5,
                             }}
                         >
-                            <div style={{ marginRight: 8 }}>
-                                <TbLockAccess />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: 10,
+                                }}
+                            >
+                                <IconContext.Provider
+                                    value={{
+                                        size: '1.2em',
+                                        color: 'rgb(139 149 169)',
+                                        className: 'global-class-name',
+                                    }}
+                                >
+                                    <div style={{ marginRight: 8 }}>
+                                        <TbLockAccess />
+                                    </div>
+                                </IconContext.Provider>
+                                <div className="sub-head">Token Address</div>
                             </div>
-                        </IconContext.Provider>
-                        <div className="sub-head">Token Address</div>
-                    </div>
-                    {/* <div className="sub-head">Balance: --</div> */}
-                </div>
-                <input
-                    placeholder="Please enter the token address"
-                    className="token-input-ms"
-                    value={'FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M'}
-                />
-            </div>
-            <div className="tkn-addr">
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: 5,
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 10,
-                            marginTop: 25,
-                        }}
-                    >
-                        <IconContext.Provider
-                            value={{
-                                size: '1.2em',
-                                color: 'rgb(139 149 169)',
-                                className: 'global-class-name',
-                            }}
-                        >
-                            <div style={{ marginRight: 8 }}>
-                                <BsFiletypeCsv />
-                            </div>
-                        </IconContext.Provider>
-                        <div className="sub-head">List of Addresses in CSV</div>
-                    </div>
-                    <div className="sub-head" style={{ cursor: 'pointer' }} onClick={() => setModal2Open(true)}>
-                        Show example
-                    </div>
-                </div>
-                <Editor
-                    value={codeValue}
-                    onValueChange={(code) => setCodeValue(code)}
-                    highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
-                    padding={10}
-                    textareaId="codeArea"
-                    className="editor"
-                    style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 16,
-                        outline: 0,
-                        width: '99%',
-                    }}
-                />
-                <div className="csv-button">
-                    Upload CSV
-                    <input type="file" name="input" onChange={handleChange} className="csv-opac" />
-                </div>
-            </div>
-            <button className="deploy-cta" onClick={onMultiSend}>
-                Continue
-            </button>
-
-            {successfulSend == "done" ? <>
-            <div className="hero-desc" style={{ margin: '20px auto 0',color:'rgb(209, 114, 37)',width:'100%' }}>
-                            Succesfully whitelisted {totalSenders} Users for {totalAmount} Tokens.
-                        </div></> : successfulSend=="fail" ? <>
-            <div className="hero-desc" style={{ margin: '20px auto 0',color:'#e75c5c',width:'100%' }}>
-                      ❌ Transaction Reverted : Error in Smart Contract call.❌
-                        </div></> : <></>}
-
-            <Modal
-                className="popup-modal"
-                title={''}
-                centered
-                open={modal2Open}
-                onOk={() => setModal2Open(false)}
-                onCancel={closeModal2}
-                okButtonProps={{ style: { display: 'none' } }}
-                cancelButtonProps={{ style: { display: 'none' } }}
-            >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <IconContext.Provider
-                        value={{
-                            size: '1.2em',
-                            color: 'rgb(0,0,0,0.7)',
-                            className: 'global-class-name',
-                        }}
-                    >
-                        <div style={{ marginRight: 8, cursor: 'pointer' }} onClick={() => copyToClipboard()}>
-                            <FaCopy />
+                            {/* <div className="sub-head">Balance: --</div> */}
                         </div>
-                    </IconContext.Provider>
-                    <div className="sub-head" style={{ marginLeft: 5, fontSize: 14, fontFamily: 'Azeret Mono' }}>
-                        {' '}
-                        {copyCode ? 'Copied' : 'Example'}
+                        <input
+                            placeholder="Please enter the token address"
+                            className="token-input-ms"
+                            value={'FkbWN4dcFQym2PgCELfThghQqLuA2e2jThMJyhZjfG4M'}
+                        />
                     </div>
+                    <div className="tkn-addr">
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: 5,
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: 10,
+                                    marginTop: 25,
+                                }}
+                            >
+                                <IconContext.Provider
+                                    value={{
+                                        size: '1.2em',
+                                        color: 'rgb(139 149 169)',
+                                        className: 'global-class-name',
+                                    }}
+                                >
+                                    <div style={{ marginRight: 8 }}>
+                                        <BsFiletypeCsv />
+                                    </div>
+                                </IconContext.Provider>
+                                <div className="sub-head">List of Addresses in CSV</div>
+                            </div>
+                            <div className="sub-head" style={{ cursor: 'pointer' }} onClick={() => setModal2Open(true)}>
+                                Show example
+                            </div>
+                        </div>
+                        <Editor
+                            value={codeValue}
+                            onValueChange={(code) => setCodeValue(code)}
+                            highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                            padding={10}
+                            textareaId="codeArea"
+                            className="editor"
+                            style={{
+                                fontFamily: '"Fira code", "Fira Mono", monospace',
+                                fontSize: 16,
+                                outline: 0,
+                                width: '99%',
+                            }}
+                        />
+                        <div className="csv-button">
+                            Upload CSV
+                            <input type="file" name="input" onChange={handleChange} className="csv-opac" />
+                        </div>
+                    </div>
+                    <button className="deploy-cta" onClick={onMultiSend}>
+                        Continue
+                    </button>
+
+                    {successfulSend == 'done' ? (
+                        <>
+                            <div
+                                className="hero-desc"
+                                style={{ margin: '20px auto 0', color: 'rgb(209, 114, 37)', width: '100%' }}
+                            >
+                                Succesfully whitelisted {totalSenders} Users for {totalAmount} Tokens.
+                            </div>
+                        </>
+                    ) : successfulSend == 'fail' ? (
+                        <>
+                            <div
+                                className="hero-desc"
+                                style={{ margin: '20px auto 0', color: '#e75c5c', width: '100%' }}
+                            >
+                                ❌ Transaction Reverted : Error in Smart Contract call.❌
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+
+                    <Modal
+                        className="popup-modal"
+                        title={''}
+                        centered
+                        open={modal2Open}
+                        onOk={() => setModal2Open(false)}
+                        onCancel={closeModal2}
+                        okButtonProps={{ style: { display: 'none' } }}
+                        cancelButtonProps={{ style: { display: 'none' } }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <IconContext.Provider
+                                value={{
+                                    size: '1.2em',
+                                    color: 'rgb(0,0,0,0.7)',
+                                    className: 'global-class-name',
+                                }}
+                            >
+                                <div style={{ marginRight: 8, cursor: 'pointer' }} onClick={() => copyToClipboard()}>
+                                    <FaCopy />
+                                </div>
+                            </IconContext.Provider>
+                            <div
+                                className="sub-head"
+                                style={{ marginLeft: 5, fontSize: 14, fontFamily: 'Azeret Mono' }}
+                            >
+                                {' '}
+                                {copyCode ? 'Copied' : 'Example'}
+                            </div>
+                        </div>
+                        <div style={{ marginTop: 20 }} />
+                        <Editor
+                            value={codeValueExample}
+                            onValueChange={(code) => setCodeValueExample(code)}
+                            highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                            padding={10}
+                            textareaId="codeArea"
+                            className="editor"
+                            style={{
+                                fontFamily: '"Fira code", "Fira Mono", monospace',
+                                fontSize: 14,
+                                outline: 0,
+                                width: '99%',
+                            }}
+                        />
+                        <div style={{ marginTop: 20 }} />
+                    </Modal>
+
+                    <Modal
+                        className="End Claim"
+                        title={''}
+                        centered
+                        open={modal1Open}
+                        onOk={() => setModal1Open(false)}
+                        onCancel={closeModal1}
+                        okButtonProps={{ style: { display: 'none' } }}
+                        cancelButtonProps={{ style: { display: 'none' } }}
+                    >
+                        <div className="sub-head" style={{ fontSize: 16, fontWeight: 500, fontFamily: 'Azeret Mono' }}>
+                            End Claim
+                        </div>
+
+                        <div className="sub-head" style={{ marginTop: 25, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
+                        Once you end the claim, there is no going back. Please be certain.
+                        </div>
+                        <input className="mdl-ipt-txt" onClick={(e)=>setEndCTA(e.target.value)}/>
+
+                        <button className="mdl-button">End Claim</button>
+                    </Modal>
+                    <Modal
+                        className="End Claim"
+                        title={''}
+                        centered
+                        open={modal3Open}
+                        onOk={() => setModal3Open(false)}
+                        onCancel={closeModal3}
+                        okButtonProps={{ style: { display: 'none' } }}
+                        cancelButtonProps={{ style: { display: 'none' } }}
+                    >
+                        <div className="sub-head" style={{ fontSize: 16, fontWeight: 500, fontFamily: 'Azeret Mono' }}>
+                            Revoke Tokens
+                        </div>
+
+                        <div className="sub-head" style={{ marginTop: 25, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
+                        Once you revoke the tokens, there is no going back. Please be certain.
+                        </div>
+                        <input className="mdl-ipt-txt" onClick={(e)=>setRevokeCTA(e.target.value)}/>
+
+                        <button className="mdl-button">Revoke Tokens</button>
+                    </Modal>
                 </div>
-                <div style={{ marginTop: 20 }} />
-                <Editor
-                    value={codeValueExample}
-                    onValueChange={(code) => setCodeValueExample(code)}
-                    highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
-                    padding={10}
-                    textareaId="codeArea"
-                    className="editor"
-                    style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 14,
-                        outline: 0,
-                        width: '99%',
-                    }}
-                />
-                <div style={{ marginTop: 20 }} />
-            </Modal>
-        </div>
             </div>
         </div>
     );

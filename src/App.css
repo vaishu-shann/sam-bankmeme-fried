@@ -365,3 +365,16 @@ border-radius: 4px;
 margin: 20px auto 0;
 display: block;
 }
+.gray-mdl-button{
+    background-color: rgb(112, 112, 111);
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+margin: 20px auto 0;
+display: block;
+}

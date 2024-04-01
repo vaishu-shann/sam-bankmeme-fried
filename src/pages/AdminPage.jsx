@@ -76,8 +76,9 @@ const Content = () => {
     const [toAddressArray, setToAddressArray] = useState([]);
     const [amountArray, setAmountArray] = useState([]);
     const [successfulSend, setSuccessfulSend] = useState();
-    const [endCTA, setEndCTA] = useState()
-    const [revokeCTA, setRevokeCTA] = useState()
+    const [endCTA, setEndCTA] = useState(null);
+    const [revokeCTA, setRevokeCTA] = useState(null);
+    const [endModalError, setEndModalError] = useState(false)
     const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new PublicKey(config.ATokenProgram);
 
     const copyToClipboard = () => {
@@ -134,7 +135,7 @@ const Content = () => {
             }
             setToAddressArray(toAddress_array);
             setAmountArray(amount_array);
-            await updateUser(toAddress_array,amount_array);
+            await updateUser(toAddress_array, amount_array);
         } catch (err) {
             console.log('error in onMultiSend', err);
         }
@@ -183,24 +184,24 @@ const Content = () => {
         return program;
     }
 
-    async function updateUser(toAddress_array,amount_array) {
+    async function updateUser(toAddress_array, amount_array) {
         const program = getProgram();
         if (!program || !wallet) {
             return;
         }
         try {
-            console.log("toAddressArray: ", toAddress_array.toString())
-            console.log("amountArray: ", amount_array.toString())
-            
+            console.log('toAddressArray: ', toAddress_array.toString());
+            console.log('amountArray: ', amount_array.toString());
+
             let result = await program.methods
-                .updateUsers(toAddress_array,amount_array)
+                .updateUsers(toAddress_array, amount_array)
                 .accounts({
                     userList: new web3.PublicKey(config.UserListID),
                     global: new web3.PublicKey(config.GlobalAccountID),
                     owner: wallet.publicKey,
                 })
                 .rpc();
-                
+
             if (result) {
                 setSuccessfulSend('done');
             }
@@ -224,7 +225,7 @@ const Content = () => {
             new PublicKey(config.ProgramID)
         );
         let bump = userAccount[1];
-        console.log("User Bump: ", userAccount.toString())
+        console.log('User Bump: ', userAccount.toString());
 
         let owner_ata = PublicKey.findProgramAddressSync(
             [
@@ -241,9 +242,9 @@ const Content = () => {
         console.log('User ATA: ', owner_ata.toString());
 
         try {
-            console.log("revokeCTA: ", revokeCTA);
-            let tokenValue = revokeCTA * Math.pow(10, config.TokenDecimals)
-            console.log("tokenValue: ", tokenValue);
+            console.log('revokeCTA: ', revokeCTA);
+            let tokenValue = revokeCTA * Math.pow(10, config.TokenDecimals);
+            console.log('tokenValue: ', tokenValue);
 
             let result = await program.methods
                 .claimRemainingTokens(new BN(bump), new BN(tokenValue))
@@ -269,9 +270,14 @@ const Content = () => {
             console.log('Transcation error: ', err);
             setSuccessfulSend('fail');
         }
-    }
+    };
 
     const onEndClaim = async () => {
+        if (endCTA != 'Admin' || endCTA != 'admin') {
+            setEndModalError(true)
+            return;
+        }
+
         const program = getProgram();
         if (!program || !wallet) {
             return;
@@ -295,7 +301,7 @@ const Content = () => {
             console.log('Transcation error: ', err);
             setSuccessfulSend('fail');
         }
-    }
+    };
 
     return (
         <div>
@@ -306,7 +312,9 @@ const Content = () => {
                         <div className="csv-button" onClick={() => setModal1Open(true)}>
                             End Claim{' '}
                         </div>
-                        <div className="csv-button" onClick={() => setModal3Open(true)}>Revoke Tokens</div>
+                        <div className="csv-button" onClick={() => setModal3Open(true)}>
+                            Revoke Tokens
+                        </div>
                         <WalletMultiButton />
                     </div>
                 </div>
@@ -490,12 +498,29 @@ const Content = () => {
                             End Claim
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}>
+                        <div
+                            className="sub-head"
+                            style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}
+                        >
                             Once you end the claim, there is no going back. Please be certain.
                         </div>
-                        <input className="mdl-ipt-txt" onClick={(e) => setEndCTA(e.target.value)} />
+                        <input
+                            className="mdl-ipt-txt"
+                            onClick={(e) => setEndCTA(e.target.value)}
+                            placeholder="Enter password here."
+                        />
 
-                        <button className="mdl-button" onClick={onEndClaim}>End Claim</button>
+                        {endCTA == null ? (
+                            <button className="gray-mdl-button">End Claim</button>
+                        ) : (
+                            <button className="mdl-button" onClick={onEndClaim}>
+                                End Claim
+                            </button>
+                        )}
+
+                        {endModalError && <div className="hero-desc" style={{ margin: '20px auto 0', color: '#000', width: '100%' }}>
+                            ❌ You have entered the wrong password.❌
+                        </div>}
                     </Modal>
                     <Modal
                         className="End Claim"
@@ -511,12 +536,21 @@ const Content = () => {
                             Revoke Tokens
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}>
+                        <div
+                            className="sub-head"
+                            style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}
+                        >
                             Once you revoke the tokens, there is no going back. Please be certain.
                         </div>
-                        <input className="mdl-ipt-txt" onClick={(e) => setRevokeCTA(e.target.value)} />
+                        <input className="mdl-ipt-txt" onClick={(e) => setRevokeCTA(e.target.value)} placeholder='Enter the no.of tokens to revoke' />
 
-                        <button className="mdl-button" onClick={onRevokeTokens}>Revoke Tokens</button>
+                      {revokeCTA == null ? 
+                            <button className="gray-mdl-button">Revoke Tokens</button>
+                      
+                      :
+                      <button className="mdl-button" onClick={onRevokeTokens}>
+                            Revoke Tokens
+                        </button>}
                     </Modal>
                 </div>
             </div>

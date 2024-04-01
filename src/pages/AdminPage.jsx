@@ -191,7 +191,7 @@ const Content = () => {
         try {
             console.log("toAddressArray: ", toAddress_array.toString())
             console.log("amountArray: ", amount_array.toString())
-            debugger
+            
             let result = await program.methods
                 .updateUsers(toAddress_array,amount_array)
                 .accounts({
@@ -200,7 +200,7 @@ const Content = () => {
                     owner: wallet.publicKey,
                 })
                 .rpc();
-                debugger;
+                
             if (result) {
                 setSuccessfulSend('done');
             }

@@ -1,18 +1,20 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider, useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { Program, AnchorProvider, web3, BN } from '@project-serum/anchor';
-import { clusterApiUrl, Connection } from '@solana/web3.js';
+import { clusterApiUrl, Connection, Keypair, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo, useState } from 'react';
 import idl from '../services/idl.json';
 import config from '../config';
+import fs from 'fs'
 
 // test
 import { PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import * as buffer from 'buffer';
 import { Buffer } from 'buffer/';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 let claimTokenInDecimal: any;
 
 (window as any).Buffer = buffer.Buffer;
@@ -52,6 +54,8 @@ const Content: FC = () => {
     const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(config.ATokenProgram);
 
     const wallet = useAnchorWallet();
+    const { connection } = useConnection();
+    const { publicKey, sendTransaction } = useWallet();
 
     function getProvider() {
         if (!wallet) {
@@ -96,20 +100,21 @@ const Content: FC = () => {
     }
 
     async function checkEligibility() {
-        // let list_ata = PublicKey.findProgramAddressSync(
-        //     [
-        //         // user_list public key
-        //         new PublicKey("ESd8AQLP9tREMMSJr4ps1DzpNB9W2eTeJQfy9nnoVTgD").toBuffer(),
-        //         // splana token program id TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
-        //         TOKEN_PROGRAM_ID.toBuffer(),
-        //         // token mint address id
-        //         new PublicKey("EbVXnyXFeZ1dYeHGBGMcdrKhmTrz48crFrj98U7rWrbe").toBuffer(),
-        //     ],
+        // const { connection } = useConnection();
+        // const { publicKey, sendTransaction } = useWallet();
+        if (!wallet) {
+            return;
+        }
 
-        //     // solan associated token program
-        //     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
-        // )[0];
-        // console.log("ATA: ", list_ata.toString())
+        // GET PRIVATE KEY FROM SECRET
+        // const secret = JSON.parse("") as number[];
+        // const secretKey = Uint8Array.from(secret);
+        // let val = Keypair.fromSecretKey(secretKey);
+        // console.log("Public Key: ", val.publicKey.toString())
+        // console.log("SECRET: ", val.secretKey.toString())
+
+        // const _privateKey = bs58.encode(val.secretKey);
+        // console.log("My private key", _privateKey);
 
         // let user_ata = PublicKey.findProgramAddressSync(
         //     [
@@ -126,13 +131,75 @@ const Content: FC = () => {
         // )[0];
         // console.log("User ATA: ", user_ata.toString())
 
-        const vaultAccount = await PublicKey.findProgramAddress(
-            [Buffer.from('list')],
-            new PublicKey('DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6')
-        );
+        // const keypair = Keypair.fromSecretKey(
+        //     bs58.decode(
+        //         ""
+        //     )
+        // );
+        // const wallet = Keypair.fromSecretKey(Uint8Array.from(kp));
+        // const userList = Keypair.generate()
+        // console.log(userList.publicKey.toBase58())
+        // const connection = new Connection(web3.clusterApiUrl('devnet'), 'confirmed');
+        // const lamports = await connection.getMinimumBalanceForRentExemption(400008);
 
+        // console.log("lamp :", lamports);
+        // console.log("publicKey LAMP :", publicKey?.toString());
+        // const create_account_instruction = SystemProgram.createAccount({
+        //     fromPubkey: keypair.publicKey,
+        //     newAccountPubkey: userList.publicKey,
+        //     space: 400008,
+        //     lamports,
+        //     programId: new PublicKey("DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6")
+        // });
+
+        // const transaction = new Transaction().add(create_account_instruction)
+        // const {
+        //     context: { slot: minContextSlot },
+        //     value: { blockhash, lastValidBlockHeight }
+        // } = await connection.getLatestBlockhashAndContext();
+
+        // let hash = await connection.getLatestBlockhash();
+        // transaction.recentBlockhash = hash.blockhash;
+        // transaction.feePayer = keypair.publicKey;
+
+        // const signature = await wallet.signTransaction(transaction);
+        // console.log('signature', signature);
+        // const serializedTransaction = signature.serialize({ requireAllSignatures: false });
+        // const base64Transaction = serializedTransaction.toString('base64');
+        // let sig = await connection.sendEncodedTransaction(base64Transaction);
+        // console.log('signature resp', sig);
+        // const signature = await sendTransaction(transaction, connection);
+        // const sig = await connection.confirmTransaction(signature, "processed");
+        // const sig = await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
+        // const sig = await sendAndConfirmTransaction(connection, transaction, [keypair, userList]);
+        // console.log("user list", sig);
+        // User List - CqTLNoNJVGT7HFeAgRQtF9GqtMK6LNDyRko1571m2S1D
+
+
+        // ------ GET LIST ATA
+        // let list_ata = PublicKey.findProgramAddressSync(
+        //     [
+        //         // global public key
+        //         new PublicKey("CqTLNoNJVGT7HFeAgRQtF9GqtMK6LNDyRko1571m2S1D").toBuffer(),
+        //         // splana token program id TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+        //         TOKEN_PROGRAM_ID.toBuffer(),
+        //         // token mint address id
+        //         new PublicKey("EbVXnyXFeZ1dYeHGBGMcdrKhmTrz48crFrj98U7rWrbe").toBuffer(),
+        //     ],
+
+        //     // solan associated token program
+        //     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
+        // )[0];
+        // console.log("Global ATA: ", list_ata.toString())
+
+        // -------- CHECK USER WALLET BUMP
+        // const vaultAccount = await PublicKey.findProgramAddress(
+        //     [Buffer.from('list')],
+        //     new PublicKey('DB8D2BUejs8UFu7PbxSf2r5ftHFfyW16gbuNZ6CgbRz6')
+        // );
         // console.log("User Bump: ", vaultAccount.toString())
 
+        // --------- CHECK ELIGIBILITY CODE
         const program = getProgram();
         if (!program || !wallet) {
             return;
@@ -161,6 +228,7 @@ const Content: FC = () => {
                 console.log('Invalid Claimer: ', wallet.publicKey.toString());
                 setNotEligible(true);
             }
+
         } catch (err) {
             console.log('Transcation error: ', err);
         }
@@ -172,7 +240,7 @@ const Content: FC = () => {
             return;
         }
         try {
-            const user_key = await PublicKey.findProgramAddress([Buffer.from('list')], new PublicKey(config.ProgramID));
+            const user_key = await PublicKey.findProgramAddress([Buffer.from('global')], new PublicKey(config.ProgramID));
             let bump = user_key[1];
 
             let user_ata = PublicKey.findProgramAddressSync(
@@ -184,9 +252,10 @@ const Content: FC = () => {
                     new PublicKey(config.TokenMintID).toBuffer(),
                 ],
 
-                // solan associated token program
+                // solana associated token program
                 SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
             )[0];
+            console.log('bump: ', user_key.toString());
             console.log('User ATA: ', user_ata.toString());
 
             let result = await program.methods
@@ -197,7 +266,7 @@ const Content: FC = () => {
                     user: wallet.publicKey,
                     mint: new web3.PublicKey(config.TokenMintID),
                     userAta: user_ata,
-                    listAta: new web3.PublicKey(config.UserListATA),
+                    globalAta: new web3.PublicKey(config.GlobalATA),
                     systemProgram: new web3.PublicKey(config.SystemProgram),
                     tokenProgram: new web3.PublicKey(config.TokenProgram),
                     associatedTokenProgram: new web3.PublicKey(config.ATokenProgram),
@@ -232,7 +301,7 @@ const Content: FC = () => {
                 <div className="avatar">
                     <img src="./img/Hero-Img.png" alt="hero-image" className="floating" />
                 </div>
-                <div className="hero-desc">                    
+                <div className="hero-desc">
                     Hi, Sam here. I know I’ve made some monumental mistakes with FTX. So, I’ve set up this claim site for ALL future
                     $SBF airdrops moving forward. Together, we CAN make it all back.
                 </div>

@@ -21,7 +21,7 @@ import { FaCopy } from 'react-icons/fa6';
 import copy from 'copy-to-clipboard';
 import { PublicKey } from '@solana/web3.js';
 import * as buffer from 'buffer';
-let TokenSymbol = '';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 const code = ``;
 const codeExample = `A5xb3WyAZRbwM8NfcXocdv5JUHZREDsF2acBKC54t82S,4.0056
@@ -76,8 +76,9 @@ const Content = () => {
     const [toAddressArray, setToAddressArray] = useState([]);
     const [amountArray, setAmountArray] = useState([]);
     const [successfulSend, setSuccessfulSend] = useState();
-    const[endCTA,setEndCTA] = useState()
-    const[revokeCTA,setRevokeCTA] = useState()
+    const [endCTA, setEndCTA] = useState()
+    const [revokeCTA, setRevokeCTA] = useState()
+    const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new PublicKey(config.ATokenProgram);
 
     const copyToClipboard = () => {
         setCopyCode(true);
@@ -119,11 +120,9 @@ const Content = () => {
                 let value = sender.split(',');
 
                 toAddress_array.push(new PublicKey(value[0]));
-
                 console.log('toAddress_array', toAddress_array);
 
                 amount_array.push(new BN(value[1] * Math.pow(10, config.TokenDecimals)));
-
                 console.log('amount_array', amount_array);
 
                 if (value[1] > 0) {
@@ -190,6 +189,8 @@ const Content = () => {
             return;
         }
         try {
+            console.log("toAddressArray: ", toAddressArray.toString())
+            console.log("amountArray: ", amountArray.toString())
             let result = await program.methods
                 .updateUsers(toAddressArray, amountArray)
                 .accounts({
@@ -210,8 +211,89 @@ const Content = () => {
         }
     }
 
-const onRevokeToken=async() =>{}
-const onEndClaim=async() =>{}
+    const onRevokeTokens = async () => {
+        const program = getProgram();
+        if (!program || !wallet) {
+            return;
+        }
+        // -------- CHECK USER WALLET BUMP
+        const userAccount = await PublicKey.findProgramAddress(
+            [Buffer.from('global')],
+            new PublicKey(config.ProgramID)
+        );
+        let bump = userAccount[1];
+        console.log("User Bump: ", userAccount.toString())
+
+        let owner_ata = PublicKey.findProgramAddressSync(
+            [
+                // user public key
+                wallet.publicKey.toBuffer(),
+                TOKEN_PROGRAM_ID.toBuffer(),
+                // token mint address id
+                new PublicKey(config.TokenMintID).toBuffer(),
+            ],
+
+            // solan associated token program
+            SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
+        )[0];
+        console.log('User ATA: ', owner_ata.toString());
+
+        try {
+            console.log("revokeCTA: ", revokeCTA);
+            let tokenValue = revokeCTA * Math.pow(10, config.TokenDecimals)
+            console.log("tokenValue: ", tokenValue);
+
+            let result = await program.methods
+                .claimRemainingTokens(new BN(bump), new BN(tokenValue))
+                .accounts({
+                    userList: new web3.PublicKey(config.UserListID),
+                    global: new web3.PublicKey(config.GlobalAccountID),
+                    globalAta: new web3.PublicKey(config.GlobalATA),
+                    ownerAta: owner_ata,
+                    mint: new web3.PublicKey(config.TokenMintID),
+                    owner: wallet.publicKey,
+                    systemProgram: new web3.PublicKey(config.SystemProgram),
+                    tokenProgram: new web3.PublicKey(config.TokenProgram),
+                    associatedTokenProgram: new web3.PublicKey(config.ATokenProgram),
+                })
+                .rpc();
+            if (result) {
+                setSuccessfulSend('done');
+            }
+            // setSignature(result.toString());
+            console.log('claim RESET result: ', result);
+            console.log('claim RESET result: ', result.toString());
+        } catch (err) {
+            console.log('Transcation error: ', err);
+            setSuccessfulSend('fail');
+        }
+    }
+
+    const onEndClaim = async () => {
+        const program = getProgram();
+        if (!program || !wallet) {
+            return;
+        }
+        try {
+            let result = await program.methods
+                .resetUsers()
+                .accounts({
+                    userList: new web3.PublicKey(config.UserListID),
+                    global: new web3.PublicKey(config.GlobalAccountID),
+                    owner: wallet.publicKey,
+                })
+                .rpc();
+            if (result) {
+                setSuccessfulSend('done');
+            }
+            // setSignature(result.toString());
+            console.log('claim RESET result: ', result);
+            console.log('claim RESET result: ', result.toString());
+        } catch (err) {
+            console.log('Transcation error: ', err);
+            setSuccessfulSend('fail');
+        }
+    }
 
     return (
         <div>
@@ -406,10 +488,10 @@ const onEndClaim=async() =>{}
                             End Claim
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
-                        Once you end the claim, there is no going back. Please be certain.
+                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}>
+                            Once you end the claim, there is no going back. Please be certain.
                         </div>
-                        <input className="mdl-ipt-txt" onClick={(e)=>setEndCTA(e.target.value)}/>
+                        <input className="mdl-ipt-txt" onClick={(e) => setEndCTA(e.target.value)} />
 
                         <button className="mdl-button" onClick={onEndClaim}>End Claim</button>
                     </Modal>
@@ -427,12 +509,12 @@ const onEndClaim=async() =>{}
                             Revoke Tokens
                         </div>
 
-                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000',letterSpacing:0.3 }}>
-                        Once you revoke the tokens, there is no going back. Please be certain.
+                        <div className="sub-head" style={{ marginTop: 45, marginBottom: 10, color: '#000', letterSpacing: 0.3 }}>
+                            Once you revoke the tokens, there is no going back. Please be certain.
                         </div>
-                        <input className="mdl-ipt-txt" onClick={(e)=>setRevokeCTA(e.target.value)}/>
+                        <input className="mdl-ipt-txt" onClick={(e) => setRevokeCTA(e.target.value)} />
 
-                        <button className="mdl-button" onClick={onRevokeToken}>Revoke Tokens</button>
+                        <button className="mdl-button" onClick={onRevokeTokens}>Revoke Tokens</button>
                     </Modal>
                 </div>
             </div>

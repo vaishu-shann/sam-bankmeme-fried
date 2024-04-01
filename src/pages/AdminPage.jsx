@@ -134,7 +134,7 @@ const Content = () => {
             }
             setToAddressArray(toAddress_array);
             setAmountArray(amount_array);
-            await updateUser();
+            await updateUser(toAddress_array,amount_array);
         } catch (err) {
             console.log('error in onMultiSend', err);
         }
@@ -183,22 +183,24 @@ const Content = () => {
         return program;
     }
 
-    async function updateUser() {
+    async function updateUser(toAddress_array,amount_array) {
         const program = getProgram();
         if (!program || !wallet) {
             return;
         }
         try {
-            console.log("toAddressArray: ", toAddressArray.toString())
-            console.log("amountArray: ", amountArray.toString())
+            console.log("toAddressArray: ", toAddress_array.toString())
+            console.log("amountArray: ", amount_array.toString())
+            debugger
             let result = await program.methods
-                .updateUsers(toAddressArray, amountArray)
+                .updateUsers(toAddress_array,amount_array)
                 .accounts({
                     userList: new web3.PublicKey(config.UserListID),
                     global: new web3.PublicKey(config.GlobalAccountID),
                     owner: wallet.publicKey,
                 })
                 .rpc();
+                debugger;
             if (result) {
                 setSuccessfulSend('done');
             }
